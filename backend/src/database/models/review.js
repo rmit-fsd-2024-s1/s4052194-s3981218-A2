@@ -1,32 +1,26 @@
 module.exports = (db, DataTypes) =>
   db.sequelize.define(
-    "user",
+    "review",
     {
-      user_id: {
+      review_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      username: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-        unique: true,
-      },
-      email: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-        unique: true,
-      },
-      password_hash: {
-        type: DataTypes.STRING(96),
+      comment: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      date_joined: {
-        type: DataTypes.DATE,
+      score: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      is_admin: {
-        type: DataTypes.BOOLEAN,
+      product_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
