@@ -14,12 +14,12 @@ app.use(express.json());
 app.use(cors());
 
 // Simple Hello World route.
-app.get("/", (req, res) => {
+app.get("/abc", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 
 // Add routes.
-require("./src/routes/profile.routes.js")(express, app);
+require("./src/routes/cart.routes.js")(express, app);
 
 // Set port, listen for requests.
 const PORT = 4000;
