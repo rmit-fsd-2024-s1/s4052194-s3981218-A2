@@ -15,6 +15,12 @@ module.exports = (express, app) => {
     // remove from cart by user id
     router.delete("/:user_id", controller.delete);
 
+    //remove item from cart by user id and product id
+    router.delete("/", controller.deleteOneCart);
+
+    // update quantity
+    router.put("/", controller.update);
+
     // Add routes to server.
     app.use("/api/cart", router);
   };

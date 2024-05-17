@@ -79,7 +79,7 @@ exports.create = (req, res) => {
       });
     });
 };
-// Select one profile from the database.
+//delete all items by user id
 exports.delete = (req, res) => {
   if (!req.params.user_id) {
     res.status(400).send({
@@ -104,3 +104,44 @@ exports.delete = (req, res) => {
     message: err.message || "Some error occurred while deleting a cart row.",
   })});
 };
+//delete by user id && item id
+exports.deleteOneCart = (req,res) => {
+  db.cart.destroy({
+    where: {
+      user_id: req.body.user_id,
+      product_id:req.body.product_id
+    },
+  }).then((data)=>{
+    if (data === 0) {
+      res.status(400).send({message:"item not found"})
+    } else {
+      res.send(`deleted: ${data} row `);
+    }})
+  .catch((err)=>{
+    console.log(err)
+    res.status(500).send({
+    message: err.message || "Some error occurred while deleting a cart row.",
+  })});
+}
+//update the quantity by user id && item id
+exports.update = (req,res) => {
+  db.cart.update(
+    {quantity:req.body.quantity},
+    {
+      where: {
+        user_id: req.body.user_id,
+        product_id:req.body.product_id
+      },
+    }
+  ).then((data)=>{
+    if (data[0] === 0) {
+      res.status(400).send({message:"cart item not found or no updated"})
+    } else {
+      res.send(`quantity updated user id : ${req.body.user_id} product id: ${req.body.product_id} quantity: ${req.body.quantity} `);
+    }})
+  .catch((err)=>{
+    console.log(err)
+    res.status(500).send({
+    message: err.message || "Some error occurred while deleting a cart row.",
+  })});
+}
