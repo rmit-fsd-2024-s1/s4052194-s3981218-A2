@@ -6,10 +6,6 @@ module.exports = (db, DataTypes) =>
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-      },
-      product_id: {
-        type: DataTypes.INTEGER,
-        unique: true, 
       }
     },
     {

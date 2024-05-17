@@ -7,14 +7,6 @@ module.exports = (db, DataTypes) =>
         autoIncrement: true,
         primaryKey: true,
       },
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      product_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
       quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,

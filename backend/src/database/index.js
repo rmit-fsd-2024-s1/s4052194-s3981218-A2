@@ -14,42 +14,44 @@ db.sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
 // all models.
 db.user = require("./models/user.js")(db, DataTypes);
 db.product = require("./models/product.js")(db, DataTypes);
-db.special_product = require("./models/special_product.js")(db,DataTypes);
+db.special_product = require("./models/special_product.js")(db, DataTypes);
 db.follower = require("./models/follower.js")(db, DataTypes);
 db.cart = require("./models/cart.js")(db, DataTypes);
 db.order = require("./models/order.js")(db, DataTypes);
 db.order_item = require("./models/order_item.js")(db, DataTypes);
 db.review = require("./models/review.js")(db, DataTypes);
 
-//Relate review,product and user
-db.review.belongsTo(db.user,{
-  foreignKey: {name:"user_id"}
-})
-db.review.belongsTo(db.product,{
-  foreignKey: {name:"product_id"}
-})
 //Relate order, user and order items
-db.order.belongsTo(db.user,{
-  foreignKey: {name:"user_id"}
-})
-db.order.belongsTo(db.order_item,{
-  foreignKey: {name:"order_item_id"}
-})
+db.user.hasMany(db.order, { foreignKey: "user_id" });
+db.order.belongsTo(db.user, {
+  foreignKey: { name: "user_id" },
+  as: "user",
+});
+db.order_item.hasMany(db.order, { foreignKey: "order_item_id" });
+db.order.belongsTo(db.order_item, {
+  foreignKey: { name: "order_item_id" },
+  as: "order",
+});
+
 //Relate order items and product
+db.product.hasMany(db.order_item, { foreignKey: "product_id" });
 db.order_item.belongsTo(db.product, {
-  foreignKey: {name:"product_id"}
-})
-//Relate cart and user 
+  foreignKey: { name: "product_id" },
+});
+//Relate cart and user
+db.user.hasMany(db.cart, { foreignKey: "user_id" });
 db.cart.belongsTo(db.user, {
-  foreignKey: {name:"user_id"}
-});   
+  foreignKey: { name: "user_id" },
+});
+db.product.hasMany(db.cart, { foreignKey: "product_id" });
 db.cart.belongsTo(db.product, {
-  foreignKey: {name:"product_id"}
-});   
+  foreignKey: { name: "product_id" },
+});
 // Relate special products and products | Special product table
-db.product.hasOne(db.special_product,  {foreignKey: {name:"product_id"}
-})
- // Relate user and user | Many to Many | Follower table 
+db.product.hasOne(db.special_product, {
+  foreignKey: { name: "product_id", unique: true },
+});
+// Relate user and user | Many to Many | Follower table
 db.user.belongsToMany(db.user, {
   through: db.follower,
   as: "user_follower",
@@ -60,7 +62,15 @@ db.user.belongsToMany(db.user, {
   as: "user_followed",
   foreignKey: "user_follower",
 });
-
+//Relate review,product and user
+db.user.hasMany(db.review, { foreignKey: "user_id" });
+db.product.hasMany(db.review, { foreignKey: "product_id" });
+db.review.belongsTo(db.user, {
+  foreignKey: { name: "user_id" },
+});
+db.review.belongsTo(db.product, {
+  foreignKey: { name: "product_id" },
+});
 // Include a sync option with seed data logic included.
 db.sync = async () => {
   // Sync schema.
@@ -73,7 +83,6 @@ db.sync = async () => {
 };
 
 async function seedData() {
-  
   // db.special_product.bulkCreate([
   //   { product_id: 1 }
   // ]);
@@ -81,4 +90,3 @@ async function seedData() {
 }
 
 module.exports = db;
-  

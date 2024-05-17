@@ -20,6 +20,7 @@ app.get("/abc", (req, res) => {
 
 // Add routes.
 require("./src/routes/cart.routes.js")(express, app);
+require("./src/routes/order.routes.js")(express, app);
 
 // Set port, listen for requests.
 const PORT = 4000;

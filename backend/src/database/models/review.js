@@ -14,15 +14,7 @@ module.exports = (db, DataTypes) =>
       score: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      product_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+      }
     },
     {
       // Don't add the timestamp attributes (updatedAt, createdAt).
