@@ -24,3 +24,5 @@ module.exports = (db, DataTypes) =>
       timestamps: false,
     }
   );
+ 
+  

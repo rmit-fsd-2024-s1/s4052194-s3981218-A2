@@ -80,6 +80,11 @@ db.review.belongsTo(db.product, {
   foreignKey: { name: "product_id" },
   allownull: false
 });
+//parent reply id
+db.review.belongsTo(db.review,{
+  foreignKey: { name: "parent_id" },
+  allownull: true
+})
 // Include a sync option with seed data logic included.
 db.sync = async () => {
   // Sync schema.
