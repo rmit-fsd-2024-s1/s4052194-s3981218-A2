@@ -11,13 +11,14 @@ module.exports = (db, DataTypes) =>
         type: DataTypes.STRING,
         allowNull: false, 
         validate: {
-          len: [0, 100]
+          len: [1, 100]
         }
       },
       score: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
+          min:1,
           max:5
         } 
       }
