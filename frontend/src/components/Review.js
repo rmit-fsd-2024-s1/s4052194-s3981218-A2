@@ -41,7 +41,7 @@ const Review = ({ productId }) => {
               className="form-control"
               id="comment"
               rows="3"
-              maxlength="100"
+              maxLength="100"
             ></textarea>
             <button>submit</button>
           </div>

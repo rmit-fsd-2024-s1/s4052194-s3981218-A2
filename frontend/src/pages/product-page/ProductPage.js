@@ -11,20 +11,23 @@ import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
 
 const Productpage = () => {
-  const products = useProducts();
-  console.log("test", products);
+  const { products, loading } = useProducts();
   const { urlId } = useParams();
-  const [loadedProducts, setLoadedProducts] = useState(products);
-  useEffect(() => {
-    setLoadedProducts(products);
-  }, [products]);
-  console.log(loadedProducts);
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  const findProduct = loadedProducts && loadedProducts.filter(
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  const product = products.filter(
     (product) => product.product_id === parseInt(urlId, 10)
   );
-  console.log(findProduct[0].product_id)
+  const {
+    product_id,
+    product_name,
+    product_image,
+    product_stock,
+    product_price,
+  } = product[0];
+  console.log(product_id, product_name);
+
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -41,7 +44,7 @@ const Productpage = () => {
         </ol>
       </nav>
 
-      {/* <div className="container my-5 font-monospace">
+      <div className="container my-5 font-monospace">
         <div className="row row-cols-2">
           <div className="col">
             <img src={"/" + product_image} alt="" width="75%" />
@@ -50,9 +53,9 @@ const Productpage = () => {
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
             <button className="addToCartbtn rounded-pill">
-                <i className="fi fi-rr-shopping-cart-add"></i> test
-              </button> */}
-      {/* {stock > 0 ? (
+              <i className="fi fi-rr-shopping-cart-add"></i> test
+            </button>
+            {/* {stock > 0 ? (
               <button
                 onClick={() => addProduct(productInfo)}
                 className={
@@ -69,12 +72,12 @@ const Productpage = () => {
                 <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
               </button>
             )} */}
-      <Review></Review>
+            <Review></Review>
+          </div>{" "}
+        </div>
+      </div>
+      <div className="addspace"></div>
     </div>
-    //     </div>
-    //   </div>
-    //   <div className="addspace"></div>
-    // </div>
   );
 };
 
