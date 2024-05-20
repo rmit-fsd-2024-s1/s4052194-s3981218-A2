@@ -1,5 +1,5 @@
 module.exports = (express, app) => {
-    const controller = require("../controllers/special_product.controller.js");
+    const controller = require("../controllers/special_products.controller.js");
     const router = express.Router();
   
     // Get all special products
