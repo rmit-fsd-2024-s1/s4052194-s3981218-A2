@@ -1,0 +1,30 @@
+li {
+  list-style:none;
+}
+ul {
+  padding-left:0px !important; 
+}
+
+.pd-50 {
+  padding:50px;
+}
+
+.star-rating-filled {
+  fill: gold;
+}
+ 
+.star-rating-blank {
+  fill: #d8d8d8;
+}
+
+
+ 
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+ 
+  to {
+    transform: rotate(360deg);
+  }
+}

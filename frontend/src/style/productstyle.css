@@ -1,0 +1,29 @@
+
+.breadcrumb a {
+    text-decoration: none;
+    color:rgba(33, 37, 41, 0.75);
+}
+.breadcrumb {
+    font-size: 11px !important;
+}
+.addToCartbtn {
+    padding:20px;
+    cursor:pointer;
+    background-color:rgb(0, 159, 127);
+    border:none;
+    color:#eee;
+}
+
+.addToCartbtn:hover {
+    background-color: rgb(2, 127, 102);
+}
+.addspace {
+    margin-bottom: 200px;
+}
+
+.addToCartbtn.disabled {
+    background-color: black;
+}
+.addToCartbtn.disabled:hover {
+    background-color: black;
+}

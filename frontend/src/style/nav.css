@@ -1,0 +1,16 @@
+.menu-nav {
+    border-top:1px solid rgb(222, 226, 230);
+}
+
+.menu-style {
+    text-decoration: none;
+    color:rgba(0,0,0,.9)
+  }
+  .menu-style:active,.menu-style:hover {
+    color:#009F7F;
+  
+  }
+  .menu-style:hover {
+    font-weight:bold;
+    text-decoration: underline;
+  }

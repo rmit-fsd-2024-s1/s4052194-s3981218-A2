@@ -1,0 +1,15 @@
+.subtitle {
+    text-decoration: none;
+    color:black;
+    font-size: 23px;
+    text-decoration: underline;
+}
+
+.subtitle:hover {
+    color:black;
+    text-decoration: underline;
+}
+
+.heading {
+    margin-bottom: 1.2em !important;
+}
