@@ -1,5 +1,4 @@
 const db = require("../database");
-const bcrypt = require('bcryptjs');
 
 // Get all users
 exports.getAll = (req, res) => {

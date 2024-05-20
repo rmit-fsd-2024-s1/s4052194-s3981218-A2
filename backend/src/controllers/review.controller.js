@@ -16,11 +16,8 @@ exports.getAll = (req, res) => {
   
 //add a review by user id,product id,  comment and score
 exports.create = async (req, res) => {
-  const comment = req.body.comment;
-  const score = req.body.score;
-  const user_id = req.body.user_id;
-  const product_id = req.body.product_id;
-  if (comment.length === 0 || comment.length > 100) {
+  const {comment,score,user_id,product_id} = req.body;
+   if (comment.length === 0 || comment.length > 100) {
     return res
       .status(400)
       .send({ message: "comment length exceeded 100 characters" });
@@ -49,11 +46,11 @@ exports.create = async (req, res) => {
 
 //delete review by id
 exports.delete = (req, res) => {
-  const reviewId = req.body.review_id;
+  const {review_id} = req.body;
   db.review
     .destroy({
       where: {
-        review_id: reviewId, //to store review ID in the front end
+        review_id: review_id, //to store review ID in the front end
       },
     })
     .then((data) => {
@@ -74,14 +71,12 @@ exports.delete = (req, res) => {
 //edit review
 exports.update = (req, res) => {
   //user id, review id, comment or score
-  const reviewId = req.body.review_id;
-  const newScore = req.body.score;
-  const newComment = req.body.comment;
+  const {review_id,score,comment} = req.body
   db.review.update(
-    { score: newScore, comment: newComment },
+    { score: score, comment: comment },
     {
       where: {
-        review_id: reviewId,
+        review_id: review_id,
       },
     }
   ).then((data) => {
