@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 const Header = () => {
+  const username = "abc";
   return (
     <>
       <nav className="navbar navbar-light header-nav py-4">
@@ -25,25 +26,25 @@ const Header = () => {
             </div>
           </form>
           <ul className="navbar nav">
-            {/* props.username === null &&  */}
-              {(<li className="nav-item ms-5 me-5">
+            {username === null && (
+              <li className="nav-item ms-5 me-5">
                 <Link to="/login" className={"header-item-style"}>
                   {" "}
                   <i className="fi fi-rr-user"></i> Login
                 </Link>
               </li>
             )}
-            {/* {props.username === null && ( */}
-              {(<li className="nav-item ms-5 me-5">
+            {username === null && (
+              <li className="nav-item ms-5 me-5">
                 <Link to="/Register" className={"header-item-style"}>
                   {" "}
                   <i className="fi fi-rr-user"></i> Register
                 </Link>
               </li>
             )}
-            {/* {props.username !== null && ( */}
-         {(     <li className="nav-item me-5 username-style">
-                {/* {props.username} */}
+            {username !== null && (
+              <li className="nav-item me-5 username-style">
+                {username}
                 <Link to="/profile" className={"ms-4 header-item-style me-4"}>
                   <i className="fi fi-rs-user-pen"></i> Profile
                 </Link>

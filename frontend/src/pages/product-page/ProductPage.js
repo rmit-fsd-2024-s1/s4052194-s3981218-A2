@@ -11,22 +11,16 @@ import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
 
 const Productpage = () => {
-  const { products, loading } = useProducts();
+  const {products,loading} = useProducts();
   const { urlId } = useParams();
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; 
   }
   const product = products.filter(
     (product) => product.product_id === parseInt(urlId, 10)
   );
-  const {
-    product_id,
-    product_name,
-    product_image,
-    product_stock,
-    product_price,
-  } = product[0];
-  console.log(product_id, product_name);
+  const {product_id,product_name,product_image,product_stock,product_price} = product[0];
+    console.log(product_id,product_name)
 
   return (
     <div>
@@ -47,15 +41,15 @@ const Productpage = () => {
       <div className="container my-5 font-monospace">
         <div className="row row-cols-2">
           <div className="col">
-            <img src={"/" + product_image} alt="" width="75%" />
+            <img src={product_image} alt="" width="75%" />
           </div>
           <div className="col">
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
             <button className="addToCartbtn rounded-pill">
-              <i className="fi fi-rr-shopping-cart-add"></i> test
-            </button>
-            {/* {stock > 0 ? (
+                <i className="fi fi-rr-shopping-cart-add"></i> test
+              </button>
+      {/* {stock > 0 ? (
               <button
                 onClick={() => addProduct(productInfo)}
                 className={
@@ -72,12 +66,11 @@ const Productpage = () => {
                 <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
               </button>
             )} */}
-            <Review></Review>
-          </div>{" "}
-        </div>
-      </div>
-      <div className="addspace"></div>
-    </div>
+      <Review></Review>
+    </div>  </div>
+   </div>
+       <div className="addspace"></div>
+     </div>
   );
 };
 
