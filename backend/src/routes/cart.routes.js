@@ -12,11 +12,11 @@ module.exports = (express, app) => {
   // add to cart
   router.post("/", controller.create);
 
-  // remove from cart by user id
-  router.delete("/:user_id", controller.delete);
-
   //remove item from cart by user id and product id
-  router.delete("/", controller.deleteOneCart);
+  router.delete("/delete", controller.deleteOneCart);
+
+  // remove from cart by user id
+  router.delete("/deleteByUser/:user_id", controller.deleteByUser);
 
   // update quantity
   router.put("/", controller.update);

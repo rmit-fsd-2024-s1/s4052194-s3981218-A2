@@ -27,6 +27,7 @@ exports.getCartById = (req, res) => {
       where: {
         user_id: req.params.user_id,
       },
+      include: { model: db.product},
     })
     .then((data) => {
       if(data.length === 0) {
@@ -80,7 +81,7 @@ exports.create = (req, res) => {
     });
 };
 //delete all items by user id
-exports.delete = (req, res) => {
+exports.deleteByUser = (req, res) => {
   if (!req.params.user_id) {
     res.status(400).send({
       message: "user_id can not be empty!"
@@ -106,6 +107,8 @@ exports.delete = (req, res) => {
 };
 //delete by user id && item id
 exports.deleteOneCart = (req,res) => {
+  const {product_id,user_id} = req.body;
+  console.log(product_id, " ", user_id)
   db.cart.destroy({
     where: {
       user_id: req.body.user_id,
