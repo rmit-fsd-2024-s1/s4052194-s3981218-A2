@@ -12,28 +12,19 @@ import useProducts from "../../fragments/context/ProductContext";
 
 const Productpage = () => {
   const products = useProducts();
-  console.log('test',products)
+  console.log("test", products);
   const { urlId } = useParams();
-
+  const [loadedProducts, setLoadedProducts] = useState(products);
+  useEffect(() => {
+    setLoadedProducts(products);
+  }, [products]);
+  console.log(loadedProducts);
   const [isDisabled, setIsDisabled] = useState(false);
-  //check from localstorage then disabled the button
-  const items = [{id:1,name:"x",price:20,stock:1,image:'x'}]
-  const findProduct = items.filter(
-    (product) => product.id === parseInt(urlId, 10)
+
+  const findProduct = loadedProducts && loadedProducts.filter(
+    (product) => product.product_id === parseInt(urlId, 10)
   );
-  if (findProduct.length === 0) {
-    return "Product not found";
-  }
-  const { id, name, price, image, stock } = findProduct[0];
-
-  const productInfo = {
-    name: name,
-    price: price,
-    image: image,
-    id: id,
-    stock: stock,
-  };
-
+  console.log(findProduct[0].product_id)
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -50,18 +41,18 @@ const Productpage = () => {
         </ol>
       </nav>
 
-      <div className="container my-5 font-monospace">
+      {/* <div className="container my-5 font-monospace">
         <div className="row row-cols-2">
           <div className="col">
-            <img src={"/" + image} alt="" width="75%" />
+            <img src={"/" + product_image} alt="" width="75%" />
           </div>
           <div className="col">
-            <p className="fs-1 fw-bolder">{name}</p>
-            <p className="fs-3">$ {price}</p>
+            <p className="fs-1 fw-bolder">{product_name}</p>
+            <p className="fs-3">$ {product_price}</p>
             <button className="addToCartbtn rounded-pill">
                 <i className="fi fi-rr-shopping-cart-add"></i> test
-              </button>
-            {/* {stock > 0 ? (
+              </button> */}
+      {/* {stock > 0 ? (
               <button
                 onClick={() => addProduct(productInfo)}
                 className={
@@ -78,12 +69,12 @@ const Productpage = () => {
                 <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
               </button>
             )} */}
-            <Review></Review>
-          </div>
-        </div>
-      </div>
-      <div className="addspace"></div>
+      <Review></Review>
     </div>
+    //     </div>
+    //   </div>
+    //   <div className="addspace"></div>
+    // </div>
   );
 };
 
