@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import useProducts from "../../fragments/context/ProductContext";
 
 const ShopOnline = () => {
-
-  const products = useProducts();
+  const {products,loading} = useProducts();
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -21,11 +23,11 @@ const ShopOnline = () => {
       <div className="text-center mt-5">
         <h2>Shop Online</h2>
         <div className="my-5"></div>
-        {/* <ProductList
-          list={items}
-          handleClick={handleClick}
-          addSuccess={addSuccess}
-        /> */}
+        <ProductList
+          list={products}
+          // handleClick={handleClick}
+          // addSuccess={addSuccess}
+        />
       </div>
     </div>
   );

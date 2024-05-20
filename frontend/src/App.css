@@ -17,7 +17,13 @@ ul {
   fill: #d8d8d8;
 }
 
+.input-group-text {
+  cursor: pointer;
+}
 
+.input-group-text:active,.input-group-text:hover {
+  color:rgb(0, 159, 127);
+}
  
 @keyframes App-logo-spin {
   from {

@@ -9,18 +9,25 @@ import { getAllProducts } from "../../services/productData";
 import { useState, useEffect } from "react";
 import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
+import useCart from "../../fragments/context/CartContext";
 
 const Productpage = () => {
-  const {products,loading} = useProducts();
+  const { products, loading } = useProducts();
   const { urlId } = useParams();
+  const { addToCart } = useCart();
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
   const product = products.filter(
     (product) => product.product_id === parseInt(urlId, 10)
   );
-  const {product_id,product_name,product_image,product_stock,product_price} = product[0];
-    console.log(product_id,product_name)
+  const {
+    product_id,
+    product_name,
+    product_image,
+    product_stock,
+    product_price,
+  } = product[0];
 
   return (
     <div>
@@ -46,12 +53,21 @@ const Productpage = () => {
           <div className="col">
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
-            <button className="addToCartbtn rounded-pill">
-                <i className="fi fi-rr-shopping-cart-add"></i> test
-              </button>
-      {/* {stock > 0 ? (
+            <button
+              className="addToCartbtn rounded-pill"
+              onClick={() =>
+                addToCart({
+                  user_id: 2,
+                  product_id: product_id,
+                  quantity: 1,
+                })
+              }
+            >
+              <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
+            </button>
+            {/* {product_stock > 0 ? (
               <button
-                onClick={() => addProduct(productInfo)}
+                onClick={() => addToCart(product[0])}
                 className={
                   isDisabled || addedToCart
                     ? "addToCartbtn rounded-pill disabled"
@@ -66,11 +82,12 @@ const Productpage = () => {
                 <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
               </button>
             )} */}
-      <Review></Review>
-    </div>  </div>
-   </div>
-       <div className="addspace"></div>
-     </div>
+            <Review></Review>
+          </div>{" "}
+        </div>
+      </div>
+      <div className="addspace"></div>
+    </div>
   );
 };
 

@@ -12,12 +12,11 @@ import {
   updateCart,
 } from "../../services/cartService";
 import { cartReducer } from "../reducer/cartReducer";
-
 const CartContext = createContext();
 const initialState = {
   products: [],
 };
-export const CartProvider = ({ children, userId }) => {
+export const CartProvider = ({ children,userId }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   //fetch data
   useEffect(() => {

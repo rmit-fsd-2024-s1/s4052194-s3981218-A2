@@ -27,36 +27,36 @@ const Main = () => {
   return (
     <>
       {/* to pass user id to cart provider */}
-      <ProductsProvider>
-        <CartProvider userId={2}>
-          <Header />
-          {useScrollToTop()}
-          <Routes>
-            <Route path="/login" element={<Signin />} />
-            <Route path="/Register" element={<SignUp />} />
-            <Route path="/profile" element={<Myprofile />} />
-            <Route path="/dietplanpage" element={<DietPlanPage />} />
-            <Route path="/dailymealplan" element={<DailyMealPlan />} />
-            <Route
-              path="/viewLastDailyMealPlan"
-              element={<ViewLastDailyMealPlan />}
-            />
-            <Route
-              path="/viewLastWeeklyMealPlan"
-              element={<ViewLastWeeklyMealPlan />}
-            />
-            <Route path="/weeklymealplan" element={<WeeklyMealPlan />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/special" element={<SpecialDeals />} />
-            <Route path="/shop-online" element={<ShopOnline />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/product-page/:urlId" element={<ProductPage />} />
-            <Route path="/thankyou" element={<Thankyou />} />
-          </Routes>
-          <Footer />
-        </CartProvider>
-      </ProductsProvider>
+        <ProductsProvider>
+          <CartProvider userId={2}>
+            <Header username={"test"} />
+            {useScrollToTop()}
+            <Routes>
+              <Route path="/login" element={<Signin />} />
+              <Route path="/Register" element={<SignUp />} />
+              <Route path="/profile" element={<Myprofile />} />
+              <Route path="/dietplanpage" element={<DietPlanPage />} />
+              <Route path="/dailymealplan" element={<DailyMealPlan />} />
+              <Route
+                path="/viewLastDailyMealPlan"
+                element={<ViewLastDailyMealPlan />}
+              />
+              <Route
+                path="/viewLastWeeklyMealPlan"
+                element={<ViewLastWeeklyMealPlan />}
+              />
+              <Route path="/weeklymealplan" element={<WeeklyMealPlan />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/special" element={<SpecialDeals />} />
+              <Route path="/shop-online" element={<ShopOnline />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/product-page/:urlId" element={<ProductPage />} />
+              <Route path="/thankyou" element={<Thankyou />} />
+            </Routes>
+            <Footer />
+          </CartProvider>
+        </ProductsProvider>
     </>
   );
 };

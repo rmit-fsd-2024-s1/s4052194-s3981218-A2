@@ -5,8 +5,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
-const Header = () => {
-  const username = "abc";
+const Header = ({username}) => {
   return (
     <>
       <nav className="navbar navbar-light header-nav py-4">

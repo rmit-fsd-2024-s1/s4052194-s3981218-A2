@@ -1,15 +1,18 @@
 import React from "react";
 import NavItem from "../../fragments/navbar/NavItem";
 import { useNavigate } from "react-router-dom";
-const ProductSection = ({ activeUserCart, handleRemove }) => {
+import useCart from "../../fragments/context/CartContext";
+const ProductSection = () => {
   const navigate = useNavigate();
+  const { state, removeFromCart, updateQuantity } = useCart();
   const handleCheckout = () => {
-    console.log(activeUserCart);
+    console.log(state);
     navigate("/checkout");
   };
+  console.log("x", state.products);
   return (
     <>
-      {activeUserCart.length > 0 ? (
+      {state.products.length > 0 ? (
         <div className="container mt-3 mb-5 p-5">
           <div className="row">
             <div className="col-8">
@@ -18,37 +21,54 @@ const ProductSection = ({ activeUserCart, handleRemove }) => {
                   <tr>
                     <th scope="col">Product</th>
                     <th scope="col">Price</th>
-                    <th scope="col"></th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {activeUserCart.map((cart) => {
+                  {state.products.map((item) => {
                     return (
-                      <tr>
+                      <tr key={item.product.product_id}>
                         <th scope="row" className="fw-normal font-monospace">
-                          {cart.cart_product.name}
+                          {item.product.product_name}
                         </th>
                         <td className="fw-normal font-monospace">
-                          {cart.cart_product.price}
+                          {item.product.product_price}
+                        </td>
+                        <td className="fw-normal font-monospace">
+                          <div class="input-group mb-3 w-75">
+                            <span
+                              class="input-group-text"
+                              onClick={() =>
+                                item.quantity !== 1
+                                  ? updateQuantity(item, "minus")
+                                  : ""
+                              }
+                            >
+                              -
+                            </span>
+                            <input
+                              type="text"
+                              class="form-control text-center"
+                              key={item.product.product_id}
+                              value={item.quantity}
+                            />
+                            <span
+                              class="input-group-text"
+                              onClick={() => updateQuantity(item, "plus")}
+                            >
+                              +
+                            </span>
+                          </div>
                         </td>
                         <td>
                           <span
-                            className="remove "
-                            onClick={() =>
-                              handleRemove(
-                                {
-                                  name: cart.cart_product.name,
-                                  id: cart.cart_product.id,
-                                  price: cart.cart_product.price,
-                                }
-                                // ,"delete"
-                              )
-                            }
+                            className="remove"
+                            onClick={() => removeFromCart(item)}
                           >
                             remove
                           </span>
                         </td>
-                        
                       </tr>
                     );
                   })}
@@ -59,9 +79,9 @@ const ProductSection = ({ activeUserCart, handleRemove }) => {
               <h2>Total</h2>
               <h3 className="font-monospace">
                 $
-                {activeUserCart.reduce((total, cart) => {
+                {state.products.reduce((total, cart) => {
                   return (
-                    Math.round((total + cart.cart_product.price) * 100) / 100
+                    Math.round((total + cart.product.product_price) * 100) / 100
                   );
                 }, 0)}
               </h3>
