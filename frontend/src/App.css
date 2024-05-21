@@ -21,6 +21,9 @@ ul {
   cursor: pointer;
 }
 
+.special-text{
+  color:rgb(244, 70, 200) !important;
+}
 .input-group-text:active,.input-group-text:hover {
   color:rgb(0, 159, 127);
 }

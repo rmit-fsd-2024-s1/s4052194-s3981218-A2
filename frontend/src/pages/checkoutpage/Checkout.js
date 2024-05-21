@@ -8,15 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import { getData } from "../../services/repository";
-const Checkout = ({
-  currentUserCartItems,
-  currentUser,
-  handleCheckOutClick,
-  setInitProducts,
-}) => {
-  console.log(currentUser);
-  console.log(currentUserCartItems);
-  initTransaction();
+import useCart from "../../fragments/context/CartContext";
+const Checkout = ({userId}) => {
+  const {state} = useCart();
   const [input, setInput] = useState({
     name: "",
     credit: "",
@@ -146,31 +140,14 @@ const Checkout = ({
       return "form-control is-invalid";
     }
   };
-  const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
 
   const onSubmit = (event) => {
     event.preventDefault();
     if (checkCreditCard && checkDate && checkCvv && checkName) {
-      handleCheckOutClick(true);
       navigate("/thankyou");
-      const updateStock = (id) => {
-        const products = getData("Products");
-        products.map((each) => {
-          if (each.id === id) {
-            return (each.stock -= 1);
-          }
-        });
-        setInitProducts(products);
-        localStorage.setItem("Products", JSON.stringify(products));
-      };
-      //update product
-      currentUserCartItems.map((k) => {
-        updateStock(k.cart_product.id);
-      });
-      console.log(currentUserCartItems);
+      //to remove from cart
     } else {
-      //add class 'is-invalid' to all inputs
       const form = event.currentTarget.closest("form");
       const inputs = form.querySelectorAll("input");
       inputs.forEach((input) => {
@@ -195,7 +172,8 @@ const Checkout = ({
           </li>
         </ol>
       </nav>
-      {currentUser === null ? (
+      {/* {currentUser === null ? ( */}
+        { false ? (
         <div className="mx-5 m-5 text-center">
           <h1>Checkout</h1>
           You are not logged in.
@@ -216,7 +194,7 @@ const Checkout = ({
                   />
                 </div>
                 {/* show products */}
-                <ProductSummary items={currentUserCartItems} />
+                <ProductSummary />
               </div>
             </div>
           </div>

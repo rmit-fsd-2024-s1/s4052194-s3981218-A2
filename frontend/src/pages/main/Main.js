@@ -50,7 +50,7 @@ const Main = () => {
               <Route path="/" element={<Home />} />
               <Route path="/special" element={<SpecialDeals />} />
               <Route path="/shop-online" element={<ShopOnline />} />
-              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout" element={<Checkout userId={2}/>} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/product-page/:urlId" element={<ProductPage />} />
               <Route path="/thankyou" element={<Thankyou />} />

@@ -7,7 +7,8 @@ import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
 import useCart from "../../fragments/context/CartContext";
 const Productpage = () => {
-  const { products, loading } = useProducts();
+  const { specialProducts,products, loading } = useProducts();
+
   const { urlId } = useParams();
   const { state, addToCart } = useCart();
   //disalbed the button
@@ -35,6 +36,11 @@ const Productpage = () => {
     product_price,
   } = product[0];
 
+
+  const getSpecialId = specialProducts.map((e) => e.product_id);
+  const isSpecial = getSpecialId.includes(product_id);
+
+
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -57,6 +63,7 @@ const Productpage = () => {
             <img src={product_image} alt="" width="75%" />
           </div>
           <div className="col">
+            {isSpecial? <p className="special-text bg-warning w-50 ">special product</p> : ""}
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
             {product_stock === 0 ? (
