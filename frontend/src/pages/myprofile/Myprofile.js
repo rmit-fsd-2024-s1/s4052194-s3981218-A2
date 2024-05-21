@@ -145,7 +145,7 @@ function MyProfile(props) {
             id="newPassword"
             value={newPassword}
             onChange={handleNewPasswordChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -156,7 +156,7 @@ function MyProfile(props) {
             id="confirmPassword"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
-            required
+            //required
           />
         </div>
         {error && <p className="text-danger">{error}</p>}

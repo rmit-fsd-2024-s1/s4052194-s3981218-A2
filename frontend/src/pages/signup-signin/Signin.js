@@ -33,7 +33,7 @@ function SignIn(props) {
         localStorage.setItem("activeUser", JSON.stringify({ user_id: verifiedUser.user_id, name: verifiedUser.username })); // Save active user to localStorage
         setIsSignedIn(true); // Set sign-in status to true
         setTimeout(() => {
-          //props.loginUser(verifiedUser.username); // Call loginUser prop function
+          props.loginUser(verifiedUser.username); // Call loginUser prop function
           navigate("/"); // Navigate to home page
         }, 1000);
       } else {

@@ -23,18 +23,23 @@ import ViewLastWeeklyMealPlan from "../diet-weekly/ViewLastWeeklyPlan";
 import { CartProvider } from "../../fragments/context/CartContext";
 import { getCartById } from "../../services/cartService";
 import { ProductsProvider } from "../../fragments/context/ProductContext";
+import { getData } from "../../services/repository";
+import { getUser, removeUser } from "../../services/repository";
+import LoginLogout from "./LoginLogout";
+
 const Main = () => {
   //fetch from local storage
+  const { username, loginUser, logout, getActiveUser } = LoginLogout();
   return (
     <>
       {/* to pass user id to cart provider */}
         <ProductsProvider>
           <CartProvider userId={2}>
-            <Header username={null}/>
+            <Header username={username} logout={logout}/>
             {useScrollToTop()}
             <Routes>
-              <Route path="/login" element={<Signin />} />
-              <Route path="/Register" element={<SignUp />} />
+              <Route path="/login" element={<Signin loginUser={loginUser} />} />
+              <Route path="/Register" element={<SignUp loginUser={loginUser} />} />
               <Route path="/profile" element={<Myprofile />} />
               <Route path="/dietplanpage" element={<DietPlanPage />} />
               <Route path="/dailymealplan" element={<DailyMealPlan />} />

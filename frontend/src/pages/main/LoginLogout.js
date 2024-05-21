@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { getUser, removeUser, getData } from "../../data/repository";
+import { getUser, removeUser, getData } from "../../services/repository";
 
 const LoginLogout = () => {
   const [username, setUsername] = useState(getUser());

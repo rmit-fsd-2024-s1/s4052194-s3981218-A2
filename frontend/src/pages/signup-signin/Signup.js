@@ -71,7 +71,7 @@ function SignUp(props) {
 
       // Redirect to home page after a short delay
       setTimeout(() => {
-        //props.loginUser(newUser.username);
+        props.loginUser(newUser.username);
         navigate("/");
       }, 1000);
     } catch (error) {

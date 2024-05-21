@@ -8,7 +8,7 @@ import useCart from "../context/CartContext";
 
 //temp
 
-const Header = ({username}) => {
+const Header = (props) => {
   const {state} = useCart();
   return (
     <>
@@ -29,7 +29,7 @@ const Header = ({username}) => {
             </div>
           </form>
           <ul className="navbar nav">
-            {username === null && (
+            {props.username === null && (
               <li className="nav-item ms-5 me-5">
                 <Link to="/login" className={"header-item-style"}>
                   {" "}
@@ -37,7 +37,7 @@ const Header = ({username}) => {
                 </Link>
               </li>
             )}
-            {username === null && (
+            {props.username === null && (
               <li className="nav-item ms-5 me-5">
                 <Link to="/Register" className={"header-item-style"}>
                   {" "}
@@ -45,9 +45,9 @@ const Header = ({username}) => {
                 </Link>
               </li>
             )}
-            {username !== null && (
+            {props.username !== null && (
               <li className="nav-item me-5 username-style">
-                {username}
+                {props.username}
                 <Link to="/profile" className={"ms-4 header-item-style me-4"}>
                   <i className="fi fi-rs-user-pen"></i> Profile
                 </Link>
@@ -59,7 +59,7 @@ const Header = ({username}) => {
                 </Link>
                 <Link
                   to="/login"
-                  // onClick={props.logout}
+                  onClick={props.logout}
                   className={"header-item-style"}
                 >
                   <i className="fi fi-rs-sign-out-alt"></i> Logout
