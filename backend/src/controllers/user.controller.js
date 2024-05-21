@@ -147,3 +147,22 @@ exports.delete = (req, res) => {
       });
     });
 };
+
+// Check if username exists
+exports.checkUsername = (req, res) => {
+  const username = req.params.username;
+  db.user
+    .findOne({ where: { username } })
+    .then((user) => {
+      if (user) {
+        res.send({ exists: true, user_id: user.user_id });
+      } else {
+        res.send({ exists: false });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while checking username.",
+      });
+    });
+};

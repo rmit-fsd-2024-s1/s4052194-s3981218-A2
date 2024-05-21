@@ -16,6 +16,9 @@ module.exports = (express, app) => {
   
     // Delete user by ID
     router.delete("/:user_id", controller.delete);
+
+     // Check username
+    router.get("/username/:username", controller.checkUsername);
   
     // Add routes to server
     app.use("/api/users", router);

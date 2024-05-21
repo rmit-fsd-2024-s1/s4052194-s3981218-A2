@@ -58,7 +58,6 @@ function MyProfile(props) {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        //navigate("/");
         axios
           .delete(`http://localhost:4000/api/users/${user.user_id}`)
           .then(() => {
@@ -76,40 +75,55 @@ function MyProfile(props) {
     });
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
 
-    if (!validatePassword(newPassword)) {
-      setError("New password does not meet requirements.");
-      return;
+    // If a new password is provided, validate it
+    if (newPassword || confirmPassword) {
+        if (!validatePassword(newPassword)) {
+            setError("New password does not meet requirements.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
     }
 
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+    try {
+      // Check if the username is already taken
+      const response = await axios.get(`http://localhost:4000/api/users/username/${user.username}`);
+      if (response.data.exists && response.data.user_id !== user.user_id) {
+        setError("This username is already used.");
+        return;
+      }
 
-    axios
-      .put(`http://localhost:4000/api/users/${user.user_id}`, {
-        username: user.username,
-        email: user.email,
-        password: newPassword,
-      })
-      .then((response) => {
-        localStorage.setItem(
-          "activeUser",
-          JSON.stringify({ user_id: user.user_id, name: user.username })
-        );
-        setIsUpdated(true);
-        setTimeout(() => {
-          setIsUpdated(false);
-          setNewPassword("");
-          setConfirmPassword("");
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("Error updating user profile:", error);
-      });
+      // Prepare the data to update
+      const updateData = {
+          username: user.username,
+          email: user.email
+      };
+
+      if (newPassword) {
+          updateData.password = newPassword;
+      }
+
+      await axios.put(`http://localhost:4000/api/users/${user.user_id}`, updateData);
+      localStorage.setItem(
+        "activeUser",
+        JSON.stringify({ user_id: user.user_id, name: user.username })
+      );
+      setIsUpdated(true);
+      setError("");
+      setTimeout(() => {
+        setIsUpdated(false);
+        setNewPassword("");
+        setConfirmPassword("");
+      }, 2000);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+    }
   };
 
   return (
@@ -136,6 +150,7 @@ function MyProfile(props) {
             value={user.username}
             onChange={(e) => setUser({ ...user, username: e.target.value })}
           />
+          {error && error.includes("username") && <p className="text-danger">{error}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
@@ -145,7 +160,6 @@ function MyProfile(props) {
             id="newPassword"
             value={newPassword}
             onChange={handleNewPasswordChange}
-            //required
           />
         </div>
         <div className="form-group">
@@ -156,10 +170,9 @@ function MyProfile(props) {
             id="confirmPassword"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
-            //required
           />
         </div>
-        {error && <p className="text-danger">{error}</p>}
+        {error && !error.includes("username") && <p className="text-danger">{error}</p>}
         <div className="my-3 d-flex justify-content-between">
           <button type="submit" className="btn btn-primary btn-save">
             Save Changes
