@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import { validatePassword } from "../../services/verify";
 import "../../style/myprofilestyle.css";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function MyProfile(props) {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    name: "",
+    user_id: "",
+    username: "",
     email: "",
     password: "",
-    dateJoined: "",
+    date_joined: "",
   });
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,85 +23,99 @@ function MyProfile(props) {
   useEffect(() => {
     const activeUser = JSON.parse(localStorage.getItem("activeUser"));
     if (activeUser) {
-      setUser(activeUser);
+      axios
+        .get(`http://localhost:4000/api/users/${activeUser.user_id}`)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          navigate("/");
+        });
     } else {
-      //handling the absence of an active user
       navigate("/");
     }
   }, [navigate]);
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
-    // Clear the error message when the user starts typing in the New Password field
     setError("");
   };
 
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
-    // Clear the error message when the user starts typing in the Confirm New Password field
     setError("");
   };
 
   const handleDelete = () => {
-    const isConfirmed = window.confirm("This action cannot be undone!");
-    if (isConfirmed) {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const updateDeleteUser = users.filter((u) => u.email !== user.email);
-
-      localStorage.setItem("users", JSON.stringify(updateDeleteUser));
-      localStorage.removeItem("activeUser");
-
-      navigate("/");
-      window.location.reload();
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //navigate("/");
+        axios
+          .delete(`http://localhost:4000/api/users/${user.user_id}`)
+          .then(() => {
+            localStorage.removeItem("activeUser");
+            window.location.reload();
+            setTimeout(() => {
+              Swal.fire("Deleted!", "Your account has been deleted.", "success");  
+            }, 2000);
+          })
+          .catch((error) => {
+            console.error("Error deleting user account:", error);
+            Swal.fire("Error!", "There was an error deleting your account.", "error");
+          });
+      }
+    });
   };
 
   const handleSave = (e) => {
     e.preventDefault();
 
-    //validating the new password
     if (!validatePassword(newPassword)) {
       setError("New password does not meet requirements.");
       return;
     }
 
-    //confirming the new password and confirm password is same
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    //hashing new password and storing back in the local storage
-    const hashedPassword = bcrypt.hashSync(newPassword, 10);
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((u) =>
-      u.email === user.email
-        ? { ...u, name: user.name, password: hashedPassword }
-        : u
-    );
-
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-    localStorage.setItem(
-      "activeUser",
-      JSON.stringify({ ...user, password: hashedPassword })
-    );
-
-    //changing the state of isUpdated
-    setIsUpdated(true);
-
-    //setting a timer for profile update message and reverting the isUpdated state
-    setTimeout(() => {
-      setIsUpdated(false);
-      setNewPassword("");
-      setConfirmPassword("");
-    }, 2000);
-    //        alert('Profile updated successfully!');
+    axios
+      .put(`http://localhost:4000/api/users/${user.user_id}`, {
+        username: user.username,
+        email: user.email,
+        password: newPassword,
+      })
+      .then((response) => {
+        localStorage.setItem(
+          "activeUser",
+          JSON.stringify({ user_id: user.user_id, name: user.username })
+        );
+        setIsUpdated(true);
+        setTimeout(() => {
+          setIsUpdated(false);
+          setNewPassword("");
+          setConfirmPassword("");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error updating user profile:", error);
+      });
   };
 
   return (
     <div className="container mt-3">
       <h2>My Profile</h2>
-      <p>Joined on {user.dateJoined}</p>
+      <p>Joined on {new Date(user.date_joined).toLocaleDateString()}</p>
       <form onSubmit={handleSave}>
         <div className="form-group">
           <label htmlFor="email">Email</label>
@@ -116,8 +133,8 @@ function MyProfile(props) {
             type="text"
             className="form-control"
             id="name"
-            value={user.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
+            value={user.username}
+            onChange={(e) => setUser({ ...user, username: e.target.value })}
           />
         </div>
         <div className="form-group">
