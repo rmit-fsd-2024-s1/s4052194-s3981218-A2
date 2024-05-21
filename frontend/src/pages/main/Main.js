@@ -30,7 +30,7 @@ const Main = () => {
       {/* to pass user id to cart provider */}
         <ProductsProvider>
           <CartProvider userId={2}>
-            <Header username={'test'}/>
+            <Header username={null}/>
             {useScrollToTop()}
             <Routes>
               <Route path="/login" element={<Signin />} />

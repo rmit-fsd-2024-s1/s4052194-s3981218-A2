@@ -5,6 +5,9 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import useCart from "../context/CartContext";
+
+//temp
+
 const Header = ({username}) => {
   const {state} = useCart();
   return (

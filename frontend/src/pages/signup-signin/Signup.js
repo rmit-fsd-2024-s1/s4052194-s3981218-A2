@@ -1,83 +1,82 @@
-import React, { useEffect, useState, Link } from "react";
+import React, { useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
+import { useForm } from "../../fragments/customHook/useForm";
+import { useNavigate } from "react-router-dom";
+import signupBackground1 from "../../assets/signup-background1.jpg";
+import signupBackground2 from "../../assets/signup-background2.jpg";
 import {
   validateEmail,
   validateEmailStorage,
   validatePassword,
 } from "../../services/verify";
-import { useNavigate } from "react-router-dom";
-import bcrypt from "bcryptjs";
-import signupBackground1 from "../../assets/signup-background1.jpg";
-import signupBackground2 from "../../assets/signup-background2.jpg";
-import { useForm } from "../../fragments/customHook/useForm";
-
-//import './SignUp.css';
 
 function SignUp(props) {
   useScrollToTop();
-  const navigate = useNavigate(); 
-  const [isSignedUp, setIsSignedUp] = useState(false); // State to handle the sign-up status
+  const navigate = useNavigate();
+  const [isSignedUp, setIsSignedUp] = useState(false);
 
-  const current = new Date(); // Current date
   const { values, errors, handleChange, validateForm, resetForm } = useForm(
     {
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
-      dateJoined: "",
     },
     (name, value, values) => {
       let error = "";
       if (name === "email") {
         if (!validateEmail(value)) {
-          error = "Please enter a valid email"; // Email validation
+          error = "Please enter a valid email";
         } else if (!validateEmailStorage(value)) {
-          error = "Email is already registered."; // Check if email is already registered
+          error = "Email is already registered.";
         }
       } else if (name === "password") {
         if (!validatePassword(value)) {
-          error = "Password must be at least 8 characters long and include a mix of uppercase letters, lowercase letters, numbers, and symbols."; // Password validation
+          error = "Password must be at least 8 characters long and include a mix of uppercase letters, lowercase letters, numbers, and symbols.";
         }
       } else if (name === "confirmPassword") {
         if (value !== values.password) {
-          error = "Passwords do not match."; // Confirm password validation
+          error = "Passwords do not match.";
         }
       }
       return error;
     }
   );
 
-  const handleClick = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+  const handleClick = async (event) => {
+    event.preventDefault();
 
     if (!validateForm()) {
-      return; // Return early if form validation fails
+      return;
     }
 
-    const hashPassword = bcrypt.hashSync(values.password, 10); // Hash the password
+    try {
+      const response = await axios.post("http://localhost:4000/api/users", {
+        username: values.name,
+        email: values.email,
+        password: values.password,
+        is_admin: false,
+      });
 
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || []; // Get existing users from localStorage
-    const date = `${current.getDate()}/${
-      current.getMonth() + 1
-    }/${current.getFullYear()}`; // Format the current date
+      const newUser = response.data;
 
-    const newUser = { ...values, password: hashPassword, dateJoined: date }; // Create new user object
+      // Store the user_id and name in local storage
+      localStorage.setItem("activeUser", JSON.stringify({ user_id: newUser.user_id, name: newUser.username }));
 
-    const updatedUsers = [...existingUsers, newUser]; // Add new user to the list of existing users
-    localStorage.setItem("users", JSON.stringify(updatedUsers)); // Save updated user list to localStorage
+      resetForm();
+      setIsSignedUp(true);
 
-    resetForm(); // Reset form values
-    localStorage.setItem("activeUser", JSON.stringify(newUser)); // Set active user in localStorage
-    setIsSignedUp(true); // Set sign-up status to true
-
-    // Redirect to home page after a short delay
-    setTimeout(() => {
-      props.loginUser(newUser.name); // Call loginUser prop function
-      navigate("/"); // Navigate to home page
-    }, 1000);
+      // Redirect to home page after a short delay
+      setTimeout(() => {
+        //props.loginUser(newUser.username);
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
   };
 
   return (
@@ -98,7 +97,7 @@ function SignUp(props) {
                 name="name"
                 placeholder="Enter name"
                 value={values.name}
-                onChange={handleChange} // Handle input change
+                onChange={handleChange}
               />
             </div>
             <div className="form-group mb-3">
@@ -110,10 +109,10 @@ function SignUp(props) {
                 name="email"
                 placeholder="Enter email"
                 value={values.email}
-                onChange={handleChange} // Handle input change
+                onChange={handleChange}
               />
               {errors.email && (
-                <div className="text-danger">{errors.email}</div> // Display email error
+                <div className="text-danger">{errors.email}</div>
               )}
             </div>
             <div className="form-group mb-3">
@@ -125,10 +124,10 @@ function SignUp(props) {
                 name="password"
                 placeholder="Password"
                 value={values.password}
-                onChange={handleChange} // Handle input change
+                onChange={handleChange}
               />
               {errors.password && (
-                <div className="text-danger">{errors.password}</div> // Display password error
+                <div className="text-danger">{errors.password}</div>
               )}
             </div>
             <div className="form-group mb-3">
@@ -140,23 +139,23 @@ function SignUp(props) {
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={values.confirmPassword}
-                onChange={handleChange} // Handle input change
+                onChange={handleChange}
               />
               {errors.confirmPassword && (
-                <div className="text-danger">{errors.confirmPassword}</div> // Display confirm password error
+                <div className="text-danger">{errors.confirmPassword}</div>
               )}
             </div>
             <button
               type="submit"
               className="btn btn-primary btn-sm"
-              onClick={handleClick} // Handle form submission
+              onClick={handleClick}
             >
               Sign Up
             </button>
             <button
               type="button"
               className="btn btn-link btn-sm"
-              onClick={() => navigate("/login")} // Navigate to login page
+              onClick={() => navigate("/login")}
             >
               Already have an account? Sign in
             </button>
@@ -189,7 +188,7 @@ function SignUp(props) {
         </Carousel>
         {isSignedUp && (
           <div className="text-center">
-            <p>Signed Up successfully. Redirecting to Home page...</p> {/* Display sign-up success message */}
+            <p>Signed Up successfully. Redirecting to Home page...</p>
           </div>
         )}
       </div>

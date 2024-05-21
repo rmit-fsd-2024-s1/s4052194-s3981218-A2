@@ -21,6 +21,7 @@ require("./src/routes/user.routes.js")(express, app);
 require("./src/routes/special_products.routes.js")(express, app);
 require("./src/routes/follower.routes.js")(express, app);
 require("./src/routes/product.routes.js")(express, app);
+require("./src/routes/auth.routes.js")(express, app);
 
 // Set port, listen for requests.
 const PORT = 4000;

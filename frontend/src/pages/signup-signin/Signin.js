@@ -1,45 +1,47 @@
 import React, { useCallback, useState } from "react";
+import axios from "axios";
 import { verifySignIn } from "../../services/verify";
 import { useNavigate } from "react-router-dom";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import "../../style/signin.css";
+import { useForm } from "../../fragments/customHook/useForm";
+
+
 function SignIn(props) {
-  useScrollToTop();
+  useScrollToTop(); // Custom hook to scroll to the top of the page on component mount
 
-  //state for signIn
-  const [isSignedIn, setIsSignedIn] = useState(null);
+  const navigate = useNavigate(); // Hook to programmatically navigate to different routes
+  const [isSignedIn, setIsSignedIn] = useState(null); // State to track sign-in status
 
-  //State to store values email and password
-  const [values, setValues] = useState({
-    name: "",
+  const { values, handleChange, resetForm } = useForm({
     email: "",
     password: "",
-  });
-  const navigate = useNavigate();
+  }); // Custom hook to manage form state and handle input changes
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-  };
+  const handleClick = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
 
-  //academic reference of Week 2 and Week 3
-  const handleClick = (event) => {
-    event.preventDefault();
-
-    const verifiedUser = verifySignIn(values.email, values.password);
-
-    if (verifiedUser) {
-      localStorage.setItem("activeUser", JSON.stringify(verifiedUser));
-      setIsSignedIn(true);
-      setTimeout(() => {
-        props.loginUser(verifiedUser.name);
-        navigate("/");
+    try {
+      const response = await axios.post("http://localhost:4000/api/auth/signin", {
+        email: values.email,
+        password: values.password,
       });
-    } else {
-      setIsSignedIn(false);
+
+      const verifiedUser = response.data;
+
+      if (verifiedUser) {
+        localStorage.setItem("activeUser", JSON.stringify({ user_id: verifiedUser.user_id, name: verifiedUser.username })); // Save active user to localStorage
+        setIsSignedIn(true); // Set sign-in status to true
+        setTimeout(() => {
+          //props.loginUser(verifiedUser.username); // Call loginUser prop function
+          navigate("/"); // Navigate to home page
+        }, 1000);
+      } else {
+        setIsSignedIn(false); // Set sign-in status to false if verification fails
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      setIsSignedIn(false); // Set sign-in status to false if verification fails
     }
   };
 
@@ -58,7 +60,7 @@ function SignIn(props) {
                 type="email"
                 name="email"
                 value={values.email}
-                onChange={handleChange}
+                onChange={handleChange} // Handle input change for email
               />
             </div>
             <div className="form-group">
@@ -68,22 +70,22 @@ function SignIn(props) {
                 type="password"
                 name="password"
                 value={values.password}
-                onChange={handleChange}
+                onChange={handleChange} // Handle input change for password
               />
             </div>
             <div className="text-center">
               <button className="btn mb-3 btn-login" onClick={handleClick}>
-                SignIn
+                Sign In
               </button>
             </div>
             {isSignedIn && (
               <div className="text-center">
-                <p>Logging In</p>
+                <p>Logging In</p> {/* Display logging in message */}
               </div>
             )}
             {isSignedIn === false && (
               <div className="text-center mt-3">
-                <p>Invalid email or password</p>
+                <p>Invalid email or password</p> {/* Display invalid credentials message */}
               </div>
             )}
           </form>
@@ -92,4 +94,5 @@ function SignIn(props) {
     </div>
   );
 }
+
 export default SignIn;
