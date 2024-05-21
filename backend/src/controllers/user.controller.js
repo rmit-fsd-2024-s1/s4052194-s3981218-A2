@@ -52,25 +52,41 @@ exports.create = (req, res) => {
     });
   }
 
-  const date_joined = new Date();
-  const password_hash = bcrypt.hashSync(password, 10);
-
-  db.user
-    .create({
-      username,
-      email,
-      password_hash,
-      date_joined,
-      is_admin: is_admin || false,
-    })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating user.",
+  db.user.findOne({ where: { username } }).then(user => {
+    if (user) {
+      return res.status(400).send({
+        message: "This username is already used.",
       });
+    }
+    
+    db.user.findOne({ where: { email } }).then(user => {
+      if (user) {
+        return res.status(400).send({
+          message: "This email address is already used.",
+        });
+      }
+      
+      const date_joined = new Date();
+      const password_hash = bcrypt.hashSync(password, 10);
+
+      db.user
+        .create({
+          username,
+          email,
+          password_hash,
+          date_joined,
+          is_admin: is_admin || false,
+        })
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message: err.message || "Some error occurred while creating user.",
+          });
+        });
     });
+  });
 };
 
 // Update user by ID
@@ -86,34 +102,51 @@ exports.update = (req, res) => {
 
   const password_hash = password ? bcrypt.hashSync(password, 10) : undefined;
 
-  db.user
-    .update(
-      {
-        username,
-        email,
-        password_hash,
-        is_admin,
-      },
-      {
-        where: { user_id },
-      }
-    )
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update User with id=${user_id}. Maybe User was not found or req.body is empty!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error updating User with id=" + user_id,
+  // Check for existing username and email before updating
+  db.user.findOne({ where: { username } }).then(existingUser => {
+    if (existingUser && existingUser.user_id !== parseInt(user_id)) {
+      return res.status(400).send({
+        message: "Username is already taken.",
       });
+    }
+
+    db.user.findOne({ where: { email } }).then(existingUser => {
+      if (existingUser && existingUser.user_id !== parseInt(user_id)) {
+        return res.status(400).send({
+          message: "Email is already registered.",
+        });
+      }
+
+      db.user
+        .update(
+          {
+            username,
+            email,
+            password_hash,
+            is_admin,
+          },
+          {
+            where: { user_id },
+          }
+        )
+        .then((num) => {
+          if (num == 1) {
+            res.send({
+              message: "User was updated successfully.",
+            });
+          } else {
+            res.send({
+              message: `Cannot update User with id=${user_id}. Maybe User was not found or req.body is empty!`,
+            });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message: err.message || "Error updating User with id=" + user_id,
+          });
+        });
     });
+  });
 };
 
 // Delete user by ID

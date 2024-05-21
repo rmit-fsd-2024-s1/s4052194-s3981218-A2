@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import bcrypt from "bcryptjs";
 import { validatePassword } from "../../services/verify";
 import "../../style/myprofilestyle.css";
 import axios from "axios";
@@ -18,6 +17,7 @@ function MyProfile(props) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
@@ -47,6 +47,11 @@ function MyProfile(props) {
     setError("");
   };
 
+  const handleUsernameChange = (e) => {
+    setUser({ ...user, username: e.target.value });
+    setUsernameError("");
+  };
+
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -64,7 +69,7 @@ function MyProfile(props) {
             localStorage.removeItem("activeUser");
             window.location.reload();
             setTimeout(() => {
-              Swal.fire("Deleted!", "Your account has been deleted.", "success");  
+              Swal.fire("Deleted!", "Your account has been deleted.", "success");
             }, 2000);
           })
           .catch((error) => {
@@ -75,55 +80,59 @@ function MyProfile(props) {
     });
   };
 
-  const handleSave = async (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
 
-    // If a new password is provided, validate it
     if (newPassword || confirmPassword) {
-        if (!validatePassword(newPassword)) {
-            setError("New password does not meet requirements.");
-            return;
-        }
-
-        if (newPassword !== confirmPassword) {
-            setError("Passwords do not match.");
-            return;
-        }
-    }
-
-    try {
-      // Check if the username is already taken
-      const response = await axios.get(`http://localhost:4000/api/users/username/${user.username}`);
-      if (response.data.exists && response.data.user_id !== user.user_id) {
-        setError("This username is already used.");
+      if (!validatePassword(newPassword)) {
+        setError("New password does not meet requirements.");
         return;
       }
 
-      // Prepare the data to update
-      const updateData = {
-          username: user.username,
-          email: user.email
-      };
-
-      if (newPassword) {
-          updateData.password = newPassword;
+      if (newPassword !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
       }
-
-      await axios.put(`http://localhost:4000/api/users/${user.user_id}`, updateData);
-      localStorage.setItem(
-        "activeUser",
-        JSON.stringify({ user_id: user.user_id, name: user.username })
-      );
-      setIsUpdated(true);
-      setError("");
-      setTimeout(() => {
-        setIsUpdated(false);
-        setNewPassword("");
-        setConfirmPassword("");
-      }, 2000);
-    } catch (error) {
-      console.error("Error updating user profile:", error);
     }
+
+    const updateData = {
+      username: user.username,
+      email: user.email,
+    };
+
+    if (newPassword) {
+      updateData.password = newPassword;
+    }
+
+    axios
+      .get(`http://localhost:4000/api/users/username/${user.username}`)
+      .then((response) => {
+        if (response.data.exists && response.data.user_id !== user.user_id) {
+          setUsernameError("This username is already used.");
+          return;
+        } else {
+          axios
+            .put(`http://localhost:4000/api/users/${user.user_id}`, updateData)
+            .then((response) => {
+              localStorage.setItem(
+                "activeUser",
+                JSON.stringify({ user_id: user.user_id, name: user.username })
+              );
+              setIsUpdated(true);
+              setTimeout(() => {
+                setIsUpdated(false);
+                setNewPassword("");
+                setConfirmPassword("");
+              }, 2000);
+            })
+            .catch((error) => {
+              console.error("Error updating user profile:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking username:", error);
+      });
   };
 
   return (
@@ -148,9 +157,9 @@ function MyProfile(props) {
             className="form-control"
             id="name"
             value={user.username}
-            onChange={(e) => setUser({ ...user, username: e.target.value })}
+            onChange={handleUsernameChange}
           />
-          {error && error.includes("username") && <p className="text-danger">{error}</p>}
+          {usernameError && <p className="text-danger">{usernameError}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
@@ -172,7 +181,7 @@ function MyProfile(props) {
             onChange={handleConfirmPasswordChange}
           />
         </div>
-        {error && !error.includes("username") && <p className="text-danger">{error}</p>}
+        {error && <p className="text-danger">{error}</p>}
         <div className="my-3 d-flex justify-content-between">
           <button type="submit" className="btn btn-primary btn-save">
             Save Changes

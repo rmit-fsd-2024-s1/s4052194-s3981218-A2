@@ -9,7 +9,6 @@ import signupBackground1 from "../../assets/signup-background1.jpg";
 import signupBackground2 from "../../assets/signup-background2.jpg";
 import {
   validateEmail,
-  validateEmailStorage,
   validatePassword,
 } from "../../services/verify";
 
@@ -18,7 +17,7 @@ function SignUp(props) {
   const navigate = useNavigate();
   const [isSignedUp, setIsSignedUp] = useState(false);
 
-  const { values, errors, handleChange, validateForm, resetForm } = useForm(
+  const { values, errors, setErrors, handleChange, validateForm, resetForm } = useForm(
     {
       name: "",
       email: "",
@@ -30,8 +29,6 @@ function SignUp(props) {
       if (name === "email") {
         if (!validateEmail(value)) {
           error = "Please enter a valid email";
-        } else if (!validateEmailStorage(value)) {
-          error = "Email is already registered.";
         }
       } else if (name === "password") {
         if (!validatePassword(value)) {
@@ -75,7 +72,17 @@ function SignUp(props) {
         navigate("/");
       }, 1000);
     } catch (error) {
-      console.error("Error creating user:", error);
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.message;
+        if (errorMessage.includes("username")) {
+          setErrors((prevErrors) => ({ ...prevErrors, name: "This username is already used." }));
+        }
+        if (errorMessage.includes("email")) {
+          setErrors((prevErrors) => ({ ...prevErrors, email: "This email address is already used." }));
+        }
+      } else {
+        console.error("Error creating user:", error);
+      }
     }
   };
 
@@ -99,6 +106,9 @@ function SignUp(props) {
                 value={values.name}
                 onChange={handleChange}
               />
+              {errors.name && (
+                <div className="text-danger">{errors.name}</div>
+              )}
             </div>
             <div className="form-group mb-3">
               <label htmlFor="email">Email address</label>
