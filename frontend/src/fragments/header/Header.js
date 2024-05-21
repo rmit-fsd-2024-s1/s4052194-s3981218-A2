@@ -4,8 +4,9 @@ import "../../style/header.css";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-
+import useCart from "../context/CartContext";
 const Header = ({username}) => {
+  const {state} = useCart();
   return (
     <>
       <nav className="navbar navbar-light header-nav py-4">
@@ -49,9 +50,9 @@ const Header = ({username}) => {
                 </Link>
                 <Link to="/cart" className={"header-item-style me-4"}>
                   <i className="fi fi-rr-shopping-cart "></i> Cart
-                  {/* {props.cart.length > 0 ? (
-                    <span className="items-cart">{props.cart.length} </span>
-                  ) : null} */}
+                  {state.products.length > 0 ? (
+                    <span className="items-cart">{state.products.length} </span>
+                  ) : null}
                 </Link>
                 <Link
                   to="/login"

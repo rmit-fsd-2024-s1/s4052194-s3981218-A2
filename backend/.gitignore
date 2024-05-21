@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+
+
 # production
 /build
 
@@ -25,3 +27,5 @@ yarn-error.log*
 /src/database/config.js
 /package.json
 /package-lock.json
+
+/config.js

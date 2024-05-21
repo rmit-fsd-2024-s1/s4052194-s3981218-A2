@@ -10,7 +10,6 @@ const ProductList = ({ list }) => {
           return (
             <div className="col" key={item.id}>
               <Product
-                // handleClick={handleClick}
                 name={item.product_name}
                 price={item.product_price}
                 image={item.product_image}

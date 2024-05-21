@@ -24,12 +24,13 @@ import { CartProvider } from "../../fragments/context/CartContext";
 import { getCartById } from "../../services/cartService";
 import { ProductsProvider } from "../../fragments/context/ProductContext";
 const Main = () => {
+  //fetch from local storage
   return (
     <>
       {/* to pass user id to cart provider */}
         <ProductsProvider>
           <CartProvider userId={2}>
-            <Header username={"test"} />
+            <Header username={'test'}/>
             {useScrollToTop()}
             <Routes>
               <Route path="/login" element={<Signin />} />
