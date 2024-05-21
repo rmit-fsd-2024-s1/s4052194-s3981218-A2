@@ -7,53 +7,49 @@ import { useEffect } from "react";
 import useCart from "../fragments/context/CartContext";
 const Product = (props) => {
   const { state, addToCart } = useCart();
-  console.log(state);
   //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
-  console.log("test", state);
   useEffect(() => {
     state.products.map((item) => {
-      if (item.product_id === props.productId) {
-        console.log(props.productId);
+      if (item.product_id === props.product_id) {
         setIsDisabled(true);
       }
     });
   }, [state]);
   return (
     <div className="item text-center font-monospace mb-4">
-      <Link className={"menu-style"} to={`/product-page/${props.productId}`}>
-        <img src={props.image} alt="" />
-        <h4 className="name mt-3">{props.name}</h4>
-        <div className="price">$ {props.price}</div>
+      <Link className={"menu-style"} to={`/product-page/${props.product_id}`}>
+        <img src={props.product_image} alt="" />
+        <h4 className="name mt-3">{props.product_name}</h4>
+        <div className="price">$ {props.product_price}</div>
       </Link>
-      {console.log(props.name, "is", isDisabled)}
-      {!isDisabled ? (
+      {props.product_stock === 0 ? (
+        <button className="addCart disabled">
+          {" "}
+          <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
+        </button>
+      ) : !isDisabled ? (
         <button
-          type="button"
+          className="addCart"
           onClick={() =>
             addToCart({
               user_id: 2,
-              product_id: props.productId,
+              product_id: props.product_id,
               quantity: 1,
-              product: {
-                product_price: props.price,
-                product_name: props.name,
-                product_id: props.id,
-                product_img: props.image,
-                product_stock: props.stock,
-              },
+              product: props,
             })
           }
-          className={"addCart"}
         >
           <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
         </button>
       ) : (
-        <button type="button" className="addCart disabled" disabled>
-          <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
+        <button className="addCart disabled">
+          {" "}
+          <i className="fi fi-rr-shopping-cart-add"></i> Added To Cart
         </button>
       )}
+
       {/* {props.stock > 0 || !isDisabled ? (
         <button
           type="button"

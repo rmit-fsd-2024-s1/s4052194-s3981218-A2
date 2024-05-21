@@ -26,4 +26,6 @@
 }
 .addToCartbtn.disabled:hover {
     background-color: black;
+    cursor:not-allowed;
+
 }

@@ -6,10 +6,8 @@ const ProductSection = () => {
   const navigate = useNavigate();
   const { state, removeFromCart, updateQuantity } = useCart();
   const handleCheckout = () => {
-    console.log(state);
     navigate("/checkout");
   };
-  console.log("x", state.products);
   return (
     <>
       {state.products.length > 0 ? (
@@ -80,8 +78,9 @@ const ProductSection = () => {
               <h3 className="font-monospace">
                 $
                 {state.products.reduce((total, cart) => {
+                  console.log(cart.product)
                   return (
-                    Math.round((total + cart.product.product_price) * 100) / 100
+                    Math.round((total + (cart.product.product_price * cart.quantity)) * 100) / 100
                   );
                 }, 0)}
               </h3>

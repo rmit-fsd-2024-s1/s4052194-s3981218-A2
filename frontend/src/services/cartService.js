@@ -7,7 +7,13 @@ const API_HOST = "http://localhost:4000";
 
 // Add to cart 
 export async function addCart(product) {
-    const response = await axios.post(API_HOST + "/api/cart", product);
+  console.log('reached', product);
+  const item = {
+    user_id:product.user_id,
+    product_id:product.product_id,
+    quantity:product.quantity
+  }
+    const response = await axios.post(API_HOST + "/api/cart", item);
     return response;
   }
 

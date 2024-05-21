@@ -2,22 +2,28 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "../../style/productstyle.css";
-import { getData } from "../../services/repository";
-import Button from "react-bootstrap/esm/Button";
-import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
-import { getAllProducts } from "../../services/productData";
 import { useState, useEffect } from "react";
 import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
 import useCart from "../../fragments/context/CartContext";
-
 const Productpage = () => {
   const { products, loading } = useProducts();
   const { urlId } = useParams();
-  const { addToCart } = useCart();
+  const { state, addToCart } = useCart();
+  //disalbed the button
+  const [isDisabled, setIsDisabled] = useState(false);
+  //    setIsDisabled(true);
+  useEffect(() => {
+    state.products.map((item) => {
+      if (item.product_id === parseInt(urlId, 10)) {
+        setIsDisabled(true);
+      }
+    });
+  }, [state]);
   if (loading) {
     return <div>Loading...</div>;
   }
+
   const product = products.filter(
     (product) => product.product_id === parseInt(urlId, 10)
   );
@@ -53,18 +59,32 @@ const Productpage = () => {
           <div className="col">
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
-            <button
-              className="addToCartbtn rounded-pill"
-              onClick={() =>
-                addToCart({
-                  user_id: 2,
-                  product_id: product_id,
-                  quantity: 1,
-                })
-              }
-            >
-              <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
-            </button>
+            {product_stock === 0 ? (
+              <button className="addToCartbtn rounded-pill disabled">
+                {" "}
+                <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
+              </button>
+            ) : !isDisabled ? (
+              <button
+                className="addToCartbtn rounded-pill"
+                onClick={() =>
+                  addToCart({
+                    user_id: 2,
+                    product_id: product_id,
+                    quantity: 1,
+                    product: product[0],
+                  })
+                }
+              >
+                <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
+              </button>
+            ) : (
+              <button className="addToCartbtn rounded-pill disabled">
+                {" "}
+                <i className="fi fi-rr-shopping-cart-add"></i> Added To Cart
+              </button>
+            )}
+            {console.log(product_stock)}
             {/* {product_stock > 0 ? (
               <button
                 onClick={() => addToCart(product[0])}
