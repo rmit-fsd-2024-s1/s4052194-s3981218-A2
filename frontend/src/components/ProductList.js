@@ -10,11 +10,11 @@ const ProductList = ({ list }) => {
           return (
             <div className="col" key={item.id}>
               <Product
-                name={item.product_name}
-                price={item.product_price}
-                image={item.product_image}
-                productId={item.product_id}
-                stock={item.product_stock}
+                product_name={item.product_name}
+                product_price={item.product_price}
+                product_image={item.product_image}
+                product_id={item.product_id}
+                product_stock={item.product_stock}
               />
             </div>
           );

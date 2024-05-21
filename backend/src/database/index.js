@@ -93,7 +93,7 @@ db.sync = async () => {
   // Can sync with force if the schema has become out of date - note that syncing with force is a destructive operation.
   // await db.sequelize.sync({ force: true });
 
-  await seedData();
+  // await seedData();
 };
 
 async function seedData() {
