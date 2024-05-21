@@ -78,9 +78,10 @@ const ProductSection = () => {
               <h3 className="font-monospace">
                 $
                 {state.products.reduce((total, cart) => {
-                  console.log(cart.product)
                   return (
-                    Math.round((total + (cart.product.product_price * cart.quantity)) * 100) / 100
+                    Math.round(
+                      (total + cart.product.product_price * cart.quantity) * 100
+                    ) / 100
                   );
                 }, 0)}
               </h3>

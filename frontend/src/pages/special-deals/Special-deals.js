@@ -9,18 +9,19 @@ import Product from "../../components/Product";
 import { initProductData } from "../../services/productData";
 import Content from "./Content";
 import { Link } from "react-router-dom";
-
-const SpecialDeals = ({ handleClick, items }) => {
-  // const getSpecialProduct = () => {
-  //   if (items !== null) {
-  //     return items.filter((product) => {
-  //       return product.special === true;
-  //     });
-  //   }
-  // };
-  // //get special products(farm)
-  // const [farmProducts, setFarmProducts] = useState(getSpecialProduct() || null);
-
+import useProducts from "../../fragments/context/ProductContext";
+const SpecialDeals = () => {
+  const { specialProducts, products, loading } = useProducts();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  const getSpecialId = specialProducts.map((e) => e.product_id);
+  console.log(getSpecialId)
+  const special = products.filter((product) => {
+    if (getSpecialId.includes(product.product_id)) {
+      return product;
+    }
+  });
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -36,6 +37,10 @@ const SpecialDeals = ({ handleClick, items }) => {
       </div>
       <div className="container">
         <div className="row mx-5 mt-5">
+          <div className="col">
+            {" "}
+            <ProductList list={special} />
+          </div>
           {/* <Content
             handleClick={handleClick}
             items={farmProducts}
@@ -53,17 +58,19 @@ const SpecialDeals = ({ handleClick, items }) => {
             {" "}
             <img
               src="special-1.png"
-              style={{ width: "100%", height: "600px" }}
+              style={{ width: "100%", height: "50%" }}
             ></img>
+             <img
+              src="special-deal2.png"
+              style={{ width: "100%", height: "50%" }}
+            className="mt-5"></img>
           </div>
           <div className="w-100 my-4"></div>
           <div className="col">
             {" "}
-            <img
-              src="special-deal2.png"
-              style={{ width: "100%", height: "600px" }}
-            ></img>
+      
           </div>
+        
           {/* <Content
             handleClick={handleClick}
             items={farmProducts}
@@ -82,7 +89,6 @@ const SpecialDeals = ({ handleClick, items }) => {
         <div className="w-100"></div>
         <div className="col"> </div>
       </div>
-      <h2 className="text-center my-5">All Special Deal Items</h2>
       {/* <ProductList list={farmProducts} handleClick={handleClick} /> */}
     </div>
   );

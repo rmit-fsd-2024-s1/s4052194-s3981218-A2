@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import useCart from "../fragments/context/CartContext";
 const Product = (props) => {
   const { state, addToCart } = useCart();
+
   //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
@@ -17,6 +18,8 @@ const Product = (props) => {
       }
     });
   }, [state]);
+
+
   return (
     <div className="item text-center font-monospace mb-4">
       <Link className={"menu-style"} to={`/product-page/${props.product_id}`}>

@@ -10,3 +10,8 @@ export async function getAllProducts() {
     const response = await axios.get(API_HOST + "/api/products");
     return response.data;
   }
+
+  export async function getSpecialProducts() {
+    const response = await axios.get(API_HOST + "/api/special_products");
+    return response.data;
+  }
