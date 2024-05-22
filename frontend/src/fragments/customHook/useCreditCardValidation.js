@@ -134,6 +134,7 @@ const useCreditCardValidation = () => {
     }
   };
 
+  //redirect to the ty page
   const onSubmit = (event) => {
     event.preventDefault();
     if (checkCreditCard && checkDate && checkCvv && checkName) {

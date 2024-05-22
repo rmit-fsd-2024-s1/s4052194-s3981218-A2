@@ -1,23 +1,17 @@
 import { React, useState, useEffect } from "react";
 import { getData } from "../../services/repository";
 import { Link } from "react-router-dom";
-const Thankyou = ({
-  currentUserCartItems,
-  currentUser,
-  clickCheckOut,
-  setItems,
-}) => {
-  const [cartData, setCartData] = useState(getData("all_users_cart_data"));
-  const newData = cartData.filter((allUsers) => {
-    return allUsers.email !== currentUser.email;
-  });
-  useEffect(() => {
-    setItems(newData);
-  }, []);
-  const showReceipt = cartData.filter((allUsers) => {
-    return allUsers.email === currentUser.email;
-  });
-  return (
+import useCart from "../../fragments/context/CartContext";
+const Thankyou = () => {
+  const {state,checkOut,userId} = useCart();
+  //remove the items from the cart/db
+  const [receipt,setReceipt] = useState([]);
+  //reset
+  useEffect( () => {
+    setReceipt(state.products)
+    checkOut();
+  }, [userId]);
+  return (  
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
         <ol className="breadcrumb ms-2">
@@ -35,7 +29,6 @@ const Thankyou = ({
           </li>
         </ol>
       </nav>
-      {clickCheckOut ? (
         <div className="container mt-3 mb-5 p-5">
           <h2>Thank you for your purchase</h2>
           <h4>Your order was completed successfully</h4>
@@ -49,14 +42,14 @@ const Thankyou = ({
                 </tr>
               </thead>
               <tbody>
-                {showReceipt.map((cart) => {
+                {receipt.map((items) => {
                   return (
                     <tr>
                       <th scope="row" className="fw-normal font-monospace">
-                        {cart.cart_product.name}
+                        {items.product.product_name}
                       </th>
                       <td className="fw-normal font-monospace">
-                        {cart.cart_product.price}
+                        {items.product.product_price}
                       </td>
                     </tr>
                   );
@@ -67,20 +60,15 @@ const Thankyou = ({
               <h2>Total</h2>
               <h3 className="font-monospace">
                 $
-                {showReceipt.reduce((total, cart) => {
+                {receipt.reduce((total, cart) => {
                   return (
-                    Math.round((total + cart.cart_product.price) * 100) / 100
+                    Math.round((total + cart.product.product_price) * 100) / 100
                   );
                 }, 0)}
               </h3>
             </div>
           </div>
         </div>
-      ) : (
-        <div className="text-center mt-5">
-          <h4>Please go back and finish your checkout step</h4>
-        </div>
-      )}
     </div>
   );
 };
