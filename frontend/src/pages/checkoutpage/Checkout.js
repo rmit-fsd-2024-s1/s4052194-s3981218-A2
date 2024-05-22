@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import { getData } from "../../services/repository";
 import useCart from "../../fragments/context/CartContext";
-import useCreditCardValidation from "./useCreditCardValidation";
+import useCreditCardValidation from "../../fragments/customHook/useCreditCardValidation";
 const Checkout = () => {
-  const { state, userId } = useCart();
+  const { userId } = useCart();
   const { inputClassName, input, handleChange, onSubmit } =
     useCreditCardValidation();
   return (

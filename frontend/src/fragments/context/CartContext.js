@@ -11,17 +11,20 @@ import {
   removeOne,
   updateCart,
 } from "../../services/cartService";
+import { useNavigate } from "react-router-dom";
 import { cartReducer } from "../reducer/cartReducer";
 const CartContext = createContext();
+
 const initialState = {
   products: [],
 };
 export const CartProvider = ({ children,userId }) => {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(cartReducer, initialState);
   //fetch data
   useEffect(() => {
     const fetchInitData = async () => {
-      try {
+      try {    
         const products = await getCartById(userId); // get user id!
         dispatch({
           type: "InitProduct",
@@ -30,14 +33,21 @@ export const CartProvider = ({ children,userId }) => {
           },
         });
       } catch (error) {
+        dispatch({
+          type:"notfound"
+        })
         console.error("Error fetching cart data:", error);
       }
     };
     fetchInitData();
-  }, []);
+  }, [userId]);
 //add to cart function
   const addToCart = async (product) => {
     try {
+      if (userId === null) {
+        alert("You need to log in first");
+        return navigate("/login");
+      }
       //call api
       await addCart(product);
       //update state

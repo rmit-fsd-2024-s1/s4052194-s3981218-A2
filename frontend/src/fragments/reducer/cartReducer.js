@@ -22,6 +22,11 @@ export const cartReducer = (state, action) => {
         ...state,
         products: payload.products,
       };
+    case "notfound":
+      return {
+        ...state,
+        products: []
+      }
     default:
       return state;
     //     }
