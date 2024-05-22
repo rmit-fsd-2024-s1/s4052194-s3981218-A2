@@ -64,16 +64,18 @@ export const CartProvider = ({ children, userId }) => {
     }
     //if added successfully
   };
-  const removeFromCart = async (items) => {
+  const removeFromCart = async (item) => {
+    console.log("this is current state", state.products)
+    console.log('this is item passed in', item)
     try {
       //call api
-      await removeOne(items);
+      await removeOne(item);
       //update state
       const cartUpdate = state.products.filter(
         (inCart) =>
-          inCart.cart_id !== items.cart_id &&
-          inCart.product_id !== items.product_id
+          inCart.product_id !== item.product_id
       );
+      console.log('xxx',cartUpdate)
       dispatch({
         type: "removeOne",
         payload: {
