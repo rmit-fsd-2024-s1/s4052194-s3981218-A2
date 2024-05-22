@@ -11,6 +11,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../../services/verify";
+//import userService from "../../services/userService";
 
 function SignUp(props) {
   useScrollToTop();
@@ -19,7 +20,7 @@ function SignUp(props) {
 
   const { values, errors, setErrors, handleChange, validateForm, resetForm } = useForm(
     {
-      name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
