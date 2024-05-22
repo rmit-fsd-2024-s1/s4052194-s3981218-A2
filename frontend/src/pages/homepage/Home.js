@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import Heading from "../../components/Heading";
 import CarouselSection from "../../components/CarouselSection";
 import ProductList from "../../components/ProductList";
 import { getData } from "../../services/repository";
@@ -21,10 +20,11 @@ const Home = () => {
 
   return (
     <div>
-      <Heading
-        title="We're passionate about offering you the finest selection of organic goods."
-        subtitle="Every product on our shelves is carefully curated to ensure that you're getting the best quality, flavor, and nutrition while supporting environmentally-friendly practices."
-      />
+  
+         <div className="heading text-center mt-5 px-5">
+      <h2>We're passionate about offering you the finest selection of organic goods. </h2>
+      <p>Every product on our shelves is carefully curated to ensure that you're getting the best quality, flavor, and nutrition while supporting environmentally-friendly practices.</p>
+    </div>
       <CarouselSection />
       <Banner text="Special products" linkto="/special" />
       <SectionHeader

@@ -15,7 +15,7 @@ ul {
 }
 
 .star-rating-filled {
-  fill: gold;
+  fill: rgb(72,72,72);
 }
  
 .star-rating-blank {
