@@ -35,7 +35,7 @@ export const CartProvider = ({ children,userId }) => {
     };
     fetchInitData();
   }, []);
-  console.log("how state", state);
+//add to cart function
   const addToCart = async (product) => {
     try {
       //call api
@@ -110,6 +110,7 @@ export const CartProvider = ({ children,userId }) => {
     addToCart,
     removeFromCart,
     updateQuantity,
+    userId
   };
   console.log("latest state", value.state);
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

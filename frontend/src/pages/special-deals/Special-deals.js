@@ -1,12 +1,10 @@
 import { React, useState } from "react";
 import { useEffect } from "react";
-import { getFarmProducts } from "../../services/productData";
 import useLocalStorage from "../../fragments/customHook/useLocalStorage";
 import { getData } from "../../services/repository";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import ProductList from "../../components/ProductList";
 import Product from "../../components/Product";
-import { initProductData } from "../../services/productData";
 import Content from "./Content";
 import { Link } from "react-router-dom";
 import useProducts from "../../fragments/context/ProductContext";

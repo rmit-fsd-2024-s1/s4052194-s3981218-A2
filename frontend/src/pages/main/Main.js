@@ -30,11 +30,12 @@ import LoginLogout from "./LoginLogout";
 const Main = () => {
   //fetch from local storage
   const { username, loginUser, logout, getActiveUser } = LoginLogout();
+  const {user_id} = getActiveUser();
   return (
     <>
       {/* to pass user id to cart provider */}
         <ProductsProvider>
-          <CartProvider userId={2}>
+          <CartProvider userId={user_id}>
             <Header username={username} logout={logout}/>
             {useScrollToTop()}
             <Routes>

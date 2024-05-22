@@ -10,7 +10,7 @@ const Productpage = () => {
   const { specialProducts,products, loading } = useProducts();
 
   const { urlId } = useParams();
-  const { state, addToCart } = useCart();
+  const { state, addToCart,userId } = useCart();
   //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
@@ -76,7 +76,7 @@ const Productpage = () => {
                 className="addToCartbtn rounded-pill"
                 onClick={() =>
                   addToCart({
-                    user_id: 2,
+                    user_id: userId,
                     product_id: product_id,
                     quantity: 1,
                     product: product[0],
@@ -90,25 +90,7 @@ const Productpage = () => {
                 {" "}
                 <i className="fi fi-rr-shopping-cart-add"></i> Added To Cart
               </button>
-            )}
-            {console.log(product_stock)}
-            {/* {product_stock > 0 ? (
-              <button
-                onClick={() => addToCart(product[0])}
-                className={
-                  isDisabled || addedToCart
-                    ? "addToCartbtn rounded-pill disabled"
-                    : "addToCartbtn rounded-pill"
-                }
-              >
-                <i className="fi fi-rr-shopping-cart-add"></i>{" "}
-                {isDisabled || addedToCart ? " Added To Cart" : "Add To Cart"}
-              </button>
-            ) : (
-              <button className="addToCartbtn rounded-pill disabled">
-                <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
-              </button>
-            )} */}
+            )}           
             <Review></Review>
           </div>{" "}
         </div>
