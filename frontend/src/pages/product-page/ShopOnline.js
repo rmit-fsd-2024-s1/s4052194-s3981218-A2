@@ -1,6 +1,5 @@
 import React from "react";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
-import { getAllProducts } from "../../services/productData";
 import ProductList from "../../components/ProductList";
 import { Link } from "react-router-dom";
 import useProducts from "../../fragments/context/ProductContext";

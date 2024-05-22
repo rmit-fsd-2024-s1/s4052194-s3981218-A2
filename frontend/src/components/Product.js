@@ -6,7 +6,7 @@ import { getData } from "../services/repository";
 import { useEffect } from "react";
 import useCart from "../fragments/context/CartContext";
 const Product = (props) => {
-  const { state, addToCart } = useCart();
+  const { state, addToCart,userId } = useCart();
 
   //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
@@ -37,7 +37,7 @@ const Product = (props) => {
           className="addCart"
           onClick={() =>
             addToCart({
-              user_id: 2,
+              user_id:userId,
               product_id: props.product_id,
               quantity: 1,
               product: props,
