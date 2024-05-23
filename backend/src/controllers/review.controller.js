@@ -3,7 +3,8 @@ const db = require("../database");
 //get all reviews
 exports.getAll = (req, res) => {
     db.review
-      .findAll()
+      .findAll({      include: { model: db.user,as: "user" },
+    })
       .then((data) => {
         res.send(data);
       })

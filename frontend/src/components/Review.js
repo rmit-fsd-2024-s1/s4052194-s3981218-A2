@@ -1,21 +1,37 @@
 import React from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import useReview from "../fragments/customHook/useReview";
+import useCart from "../fragments/context/CartContext";
 const Review = ({ productId }) => {
-  const login = true;
+  const { getReviewByProductId, loadingReview } = useReview();
+  const { userId } = useCart();
   const [showInput, setShowInput] = useState(false);
   const handleClick = () => {
     setShowInput(true);
   };
+  //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
+  //star rating
   const [rating, setRating] = useState(1);
   const [hoverRating, setHoverRating] = useState(0);
   const stars = [1, 2, 3, 4, 5];
+  const [comment, setComment] = useState();
 
+  useEffect(() => {
+    if (comment) {
+      console.log(comment.trim().split(" ").length);
+    }
+  }, [comment]);
+
+  //loading reviews
+  if (loadingReview) {
+    return <div>Loading...</div>;
+  }
+  const reviews = getReviewByProductId(productId);
   return (
     <>
-      {console.log(rating)}
       <div className="mt-5">
         <div className="h4 mt-5 d-inline">Reviews</div>
-        {login && (
+        {userId && (
           <button className="d-inline mx-5" onClick={handleClick}>
             Write a review
           </button>
@@ -41,13 +57,32 @@ const Review = ({ productId }) => {
               className="form-control"
               id="comment"
               rows="3"
-              maxLength="100"
+              onChange={(e) => {
+                setComment(e.target.value);
+              }}
             ></textarea>
+            {comment}
             <button>submit</button>
           </div>
         </>
       )}
+      <hr className="mt-3" />
       {/* //show all reviews */}
+      {reviews.map((review) => {
+        return (
+          <div>
+            <div class="card">
+              <div class="card-header bg-white">
+               <CommentStar rating={review.score}/>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title fw-bold"> {review.user.username}</h5>
+                <p class="card-text"> {review.comment}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 };
@@ -65,18 +100,42 @@ const Star = ({ starId, rating, onMouseEnter, onMouseLeave, onClick }) => {
       onClick={onClick}
     >
       <svg
-        height="25px"
-        width="33px"
-        class={styleClass}
-        viewBox="0 0 25 23"
-        data-rating="1"
+        className={styleClass}
+        focusable="false"
+        viewBox="0 0 25 24"
+        width="40px"
+        height="33px"
+        aria-label=""
+        tabIndex="0"
+        aria-hidden="true"
+        class="ugc-rr-pip-fe-svg-icon ugc-rr-pip-fe-rating-star-bar__star ugc-rr-pip-fe-rating-star-bar__star--filled"
       >
-        <polygon
-          stroke-width="0"
-          points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78"
-        />
+        <path d="m11.9999 6 2.1245 3.6818 4.1255.9018-2.8125 3.1773L15.8626 18l-3.8627-1.7182L8.1372 18l.4252-4.2391-2.8125-3.1773 4.1255-.9018L11.9999 6z"></path>
       </svg>
     </div>
+  );
+};
+const CommentStar = ({rating}) => {
+  const stars = [];
+  for (let i = 0; i < rating; i++) {
+    stars.push(
+    <svg
+      focusable="false"
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      aria-label=""
+      tabIndex="0"
+      aria-hidden="true"
+      class="ugc-rr-pip-fe-svg-icon ugc-rr-pip-fe-rating-star-bar__star ugc-rr-pip-fe-rating-star-bar__star--filled"
+    >
+      <path d="m11.9999 6 2.1245 3.6818 4.1255.9018-2.8125 3.1773L15.8626 18l-3.8627-1.7182L8.1372 18l.4252-4.2391-2.8125-3.1773 4.1255-.9018L11.9999 6z"></path>
+    </svg>);
+  }
+  return (
+    <>
+      {stars}
+    </>
   );
 };
 export default Review;

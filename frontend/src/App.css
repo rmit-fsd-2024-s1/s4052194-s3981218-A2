@@ -9,8 +9,13 @@ ul {
   padding:50px;
 }
 
+.special-badge {
+  position: absolute;
+  color:rgb(244, 70, 200) !important;
+}
+
 .star-rating-filled {
-  fill: gold;
+  fill: rgb(72,72,72);
 }
  
 .star-rating-blank {

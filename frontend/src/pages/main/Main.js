@@ -30,7 +30,6 @@ import LoginLogout from "./LoginLogout";
 const Main = () => {
   //fetch from local storage
   const { username, loginUser, logout, userId} = LoginLogout();
-  console.log(userId)
   return (
     <>
       {/* to pass user id to cart provider */}

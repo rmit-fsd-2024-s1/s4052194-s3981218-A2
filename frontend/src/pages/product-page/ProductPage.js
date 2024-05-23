@@ -6,11 +6,14 @@ import { useState, useEffect } from "react";
 import Review from "../../components/Review";
 import useProducts from "../../fragments/context/ProductContext";
 import useCart from "../../fragments/context/CartContext";
+import { getAllReviews } from "../../services/reviewService";
+import useReview from "../../fragments/customHook/useReview";
+import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 const Productpage = () => {
-  const { specialProducts,products, loading } = useProducts();
-
+  const { specialProducts, products, loading } = useProducts();
   const { urlId } = useParams();
-  const { state, addToCart,userId } = useCart();
+  const { state, addToCart, userId } = useCart();
+  useScrollToTop();
   //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
@@ -24,7 +27,6 @@ const Productpage = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   const product = products.filter(
     (product) => product.product_id === parseInt(urlId, 10)
   );
@@ -36,10 +38,8 @@ const Productpage = () => {
     product_price,
   } = product[0];
 
-
   const getSpecialId = specialProducts.map((e) => e.product_id);
   const isSpecial = getSpecialId.includes(product_id);
-
 
   return (
     <div>
@@ -63,7 +63,11 @@ const Productpage = () => {
             <img src={product_image} alt="" width="75%" />
           </div>
           <div className="col">
-            {isSpecial? <p className="special-text bg-warning w-50 ">special product</p> : ""}
+            {isSpecial ? (
+              <p className="special-text bg-warning w-50 ">special product</p>
+            ) : (
+              ""
+            )}
             <p className="fs-1 fw-bolder">{product_name}</p>
             <p className="fs-3">$ {product_price}</p>
             {product_stock === 0 ? (
@@ -90,10 +94,10 @@ const Productpage = () => {
                 {" "}
                 <i className="fi fi-rr-shopping-cart-add"></i> Added To Cart
               </button>
-            )}           
-            <Review></Review>
+            )}
           </div>{" "}
         </div>
+        <Review productId={parseInt(urlId, 10)}></Review>
       </div>
       <div className="addspace"></div>
     </div>

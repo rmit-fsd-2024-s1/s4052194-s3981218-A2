@@ -22,7 +22,7 @@ export const cartReducer = (state, action) => {
         ...state,
         products: payload.products,
       };
-    case "notfound":
+    case "reset":
       return {
         ...state,
         products: []
