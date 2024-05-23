@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import { useForm } from "../../fragments/customHook/useForm";
 import { useNavigate } from "react-router-dom";
 import signupBackground1 from "../../assets/signup-background1.jpg";
 import signupBackground2 from "../../assets/signup-background2.jpg";
-import {
-  validateEmail,
-  validatePassword,
-} from "../../services/verify";
-//import userService from "../../services/userService";
+import { validateEmail, validatePassword } from "../../services/verify";
+import userService from "../../services/userService";
 
 function SignUp(props) {
   useScrollToTop();
@@ -52,16 +48,14 @@ function SignUp(props) {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/api/users", {
-        username: values.name,
+      const newUser = await userService.createUser({
+        username: values.username,
         email: values.email,
         password: values.password,
         is_admin: false,
       });
 
-      const newUser = response.data;
-
-      // Store the user_id and name in local storage
+      // Store the user_id and username in local storage
       localStorage.setItem("activeUser", JSON.stringify({ user_id: newUser.user_id, name: newUser.username }));
 
       resetForm();
@@ -76,7 +70,7 @@ function SignUp(props) {
       if (error.response && error.response.status === 400) {
         const errorMessage = error.response.data.message;
         if (errorMessage.includes("username")) {
-          setErrors((prevErrors) => ({ ...prevErrors, name: "This username is already used." }));
+          setErrors((prevErrors) => ({ ...prevErrors, username: "This username is already used." }));
         }
         if (errorMessage.includes("email")) {
           setErrors((prevErrors) => ({ ...prevErrors, email: "This email address is already used." }));
@@ -97,18 +91,18 @@ function SignUp(props) {
           <h5 style={{ fontStyle: "italic" }}>for new deals</h5>
           <form>
             <div className="form-group mb-3">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="username">Username</label>
               <input
                 type="text"
                 className="form-control form-control-sm"
-                id="name"
-                name="name"
-                placeholder="Enter name"
-                value={values.name}
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                value={values.username}
                 onChange={handleChange}
               />
-              {errors.name && (
-                <div className="text-danger">{errors.name}</div>
+              {errors.username && (
+                <div className="text-danger">{errors.username}</div>
               )}
             </div>
             <div className="form-group mb-3">
