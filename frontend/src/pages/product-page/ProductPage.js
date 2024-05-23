@@ -9,7 +9,7 @@ import useCart from "../../fragments/context/CartContext";
 import { getAllReviews } from "../../services/reviewService";
 import useReview from "../../fragments/customHook/useReview";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
-const Productpage = () => {
+const Productpage = ({username}) => {
   const { specialProducts, products, loading } = useProducts();
   const { urlId } = useParams();
   const { state, addToCart, userId } = useCart();
@@ -97,7 +97,7 @@ const Productpage = () => {
             )}
           </div>{" "}
         </div>
-        <Review productId={parseInt(urlId, 10)}></Review>
+        <Review productId={parseInt(urlId, 10)} ></Review>
       </div>
       <div className="addspace"></div>
     </div>

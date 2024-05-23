@@ -10,13 +10,13 @@ module.exports = (db, DataTypes) =>
       comment: {
         type: DataTypes.STRING,
         allowNull: false, 
-        validate: {
+        validate: {  
           len: [1, 100]
         }
       },
       score: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         validate: {
           min:1,
           max:5

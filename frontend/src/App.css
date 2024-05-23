@@ -22,6 +22,17 @@ ul {
   fill: #d8d8d8;
 }
 
+.page-item.active .page-link{
+  background-color: rgb(230, 233, 237) !important;
+  border-color: rgb(230, 233, 237) !important;
+ }
+
+.review-menu:hover {
+  cursor:pointer;
+  text-decoration-line: underline;
+  font-weight: bold;
+}
+
 .input-group-text {
   cursor: pointer;
 }

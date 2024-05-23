@@ -1,45 +1,95 @@
-import React from 'react'
-import { useReducer,useEffect ,useState} from 'react';
-import { getAllReviews } from '../../services/reviewService';
-import { reviewReducer } from '../reducer/reviewReducer';
+import React from "react";
+import { useReducer, useEffect, useState } from "react";
+import {
+  getAllReviews,
+  addReview,
+  deleteReview,
+} from "../../services/reviewService";
+import { reviewReducer } from "../reducer/reviewReducer";
 const initialState = {
-    reviews: [],
-  };
+  reviews: [],
+};
 
 const useReview = () => {
-    const [state, dispatch] = useReducer(reviewReducer, initialState);
-    const [loadingReview,setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchInitData = async () => {
-          try {
-            const reviews = await getAllReviews();
-            dispatch({
-                type: "InitReviews",
-                payload: {
-                  reviews: reviews,
-                },
-              });
-          } catch (err) {
-            console.log(err);
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchInitData();
-        //fetch api reviews
-      }, []);
-const getReviewByProductId = (id) => {
-    console.log(state.reviews)
-    const reviews = state.reviews.filter((r)=>{
-        return r.product_id === id
-    })
+  const [state, dispatch] = useReducer(reviewReducer, initialState);
+  const [loadingReview, setLoading] = useState(true);
+  const [newReview, setNewReview] = useState([]);
+  useEffect(() => {
+    const fetchInitData = async () => {
+      try {
+        const reviews = await getAllReviews();
+        dispatch({
+          type: "InitReviews",
+          payload: {
+            reviews: reviews,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInitData();
+    //fetch api reviews
+    console.log("fetch1");
+  }, [newReview]);
+  const getReviewByProductId = (id) => {
+    const reviews = state.reviews.filter((r) => {
+      return r.product_id === id;
+    });
     return reviews;
-}
-  return {state,loadingReview,getReviewByProductId}
-}
+  };
 
+  const removeReview = async (id) => {
+    try {
+      //call api
+      await deleteReview(id);
+      //update state
+      const reviewUpdate = state.reviews.filter(
+        (review) => review.review_id !== id 
+      );
+      const newReviews = reviewUpdate.filter((review)=> 
+        review.parent_id !== id
+      );
+      dispatch({
+        type: "removeReview",
+        payload: {
+          newReviews: newReviews,
+        },
+      });
+    } catch (error) {
+      console.error("Error removing the review: ", error);
+    }
+  };
 
+  const createReview = async (review, condition) => {
+    try {
+      //call api
+      let newReview = await addReview(review);
+      //update state
+      if (condition === "noparent") {
+        newReview.parent_id = null;
+      }
+      dispatch({
+        type: "addReview",
+        payload: {
+          reviews: newReview,
+        },
+      });
+      setNewReview(newReview);
+    } catch (error) {
+      console.error("Error creating review:", error);
+    }
+    //if added successfully
+  };
+  return {
+    state,
+    loadingReview,
+    getReviewByProductId,
+    createReview,
+    removeReview,
+  };
+};
 
-export default useReview
-
+export default useReview;

@@ -57,7 +57,7 @@ const Main = () => {
               <Route path="/shop-online" element={<ShopOnline />} />
               <Route path="/checkout" element={<Checkout/>} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/product-page/:urlId" element={<ProductPage />} />
+              <Route path="/product-page/:urlId" element={<ProductPage/>} />
               <Route path="/thankyou" element={<Thankyou />} />
             </Routes>
             <Footer />

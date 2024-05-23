@@ -7,7 +7,7 @@ module.exports = (express, app) => {
   // add review
   router.post("/", controller.create);
   //delete reivew
-  router.delete("/", controller.delete);
+  router.delete("/delete", controller.delete);
   //update review
   router.patch("/", controller.update);
   app.use("/api/review", router);

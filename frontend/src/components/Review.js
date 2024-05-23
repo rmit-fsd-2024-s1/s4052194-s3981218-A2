@@ -1,13 +1,24 @@
 import React from "react";
 import { useRef, useState, useEffect } from "react";
 import useReview from "../fragments/customHook/useReview";
+import ReactPaginate from "react-paginate";
 import useCart from "../fragments/context/CartContext";
 const Review = ({ productId }) => {
-  const { getReviewByProductId, loadingReview } = useReview();
+  const {
+    state,
+    getReviewByProductId,
+    loadingReview,
+    createReview,
+    removeReview,
+  } = useReview();
   const { userId } = useCart();
+  const [page, setPage] = useState(0);
   const [showInput, setShowInput] = useState(false);
   const handleClick = () => {
     setShowInput(true);
+  };
+  const handlePageClick = (data) => {
+    setPage(data.selected);
   };
 
   //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
@@ -20,34 +31,55 @@ const Review = ({ productId }) => {
   const [reply, showReply] = useState(false);
   const [reviewReply, setReviewReply] = useState();
   const [replyText, setReplyText] = useState();
+  const [success, setSuccess] = useState(false);
+  const [productReviews, setProductReviews] = useState();
+  useEffect(() => {
+    setProductReviews(getReviewByProductId(productId));
+  }, [state, productId, success]);
   const onSubmit = (parentId) => {
-    if (comment && comment.trim().split(" ").length > 100) {
-      console.log("exceeded 100 words");
+    if (
+      comment &&
+      (comment.trim().split(" ").length > 100 ||
+        comment.trim().split(" ").length === 0)
+    ) {
       setWarning(true);
     } else {
       setWarning(false);
-      console.log(
-        "user:",
-        userId,
-        "comment:",
-        comment,
-        "score:",
-        rating,
-        "product id:",
-        productId,
-        "parent id",
-        parentId
-      );
+      let review = { user_id: userId, product_id: productId };
+      if (parentId) {
+        review.score = null;
+        review.comment = replyText;
+        review.parent_id = parentId;
+      } else {
+        review.score = rating;
+        review.comment = comment;
+      }
+
+      try {
+        createReview(review);
+        setComment("");
+        setReplyText("");
+        setSuccess(true);
+      } catch (err) {
+        setSuccess(false);
+
+        console.log(err);
+      }
     }
   };
-
+  const onDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      removeReview(id);
+    }
+  };
   //loading reviews
   if (loadingReview) {
     return <div>Loading...</div>;
   }
-  const reviews = getReviewByProductId(productId);
+
   return (
     <>
+      {console.log(productReviews, "current")}
       <div className="mt-5">
         <div className="h4 mt-5 d-inline">Reviews</div>
         {userId && (
@@ -76,6 +108,7 @@ const Review = ({ productId }) => {
               className="form-control"
               id="comment"
               rows="3"
+              value={comment}
               onChange={(e) => {
                 setComment(e.target.value);
               }}
@@ -86,13 +119,16 @@ const Review = ({ productId }) => {
               </p>
             )}
             {comment ? comment.trim().split(" ").length : 0} word(s)
-            <button onClick={onSubmit}>submit</button>
+            <button onClick={() => onSubmit()}>submit</button>
+            {success && (
+              <p className="text-success">Review submitted successfully. </p>
+            )}
           </div>
         </>
       )}
       <hr className="mt-3" />
       {/* //show all reviews */}
-      {reviews.map((review) => {
+      {productReviews.map((review) => {
         return (
           <div>
             {review.parent_id === null ? (
@@ -107,7 +143,7 @@ const Review = ({ productId }) => {
                     <div className="d-inline float-end">
                       {" "}
                       <span
-                        class="mx-5"
+                        className="review-menu mx-5"
                         onClick={() => {
                           showReply(true);
                           setReviewReply(review.review_id);
@@ -125,6 +161,7 @@ const Review = ({ productId }) => {
                         className="form-control"
                         id="comment"
                         rows="3"
+                        value={replyText}
                         onChange={(e) => {
                           setReplyText(e.target.value);
                         }}
@@ -144,8 +181,13 @@ const Review = ({ productId }) => {
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
-                      <span class="mx-5">edit</span>
-                      <span class="">delete</span>
+                      <span className="mx-5 review-menu">edit</span>
+                      <span
+                        className="review-menu"
+                        onClick={() => onDelete(review.review_id)}
+                      >
+                        delete
+                      </span>
                     </div>
                   ) : (
                     ""
@@ -153,26 +195,36 @@ const Review = ({ productId }) => {
                   {/* reply to review part */}
                 </div>
 
-                {reviews.map((r) => {
+                {productReviews.map((r) => {
                   if (r.parent_id === review.review_id) {
-                    return (
-                      <div class="ms-5">
-                        <div class="card-header bg-white"></div>
-                        <div class="card-body">
-                          <h5 class="card-title fw-bold"> {r.user.username}</h5>
-                          <p class="card-text"> {r.comment}</p>
-                          {userId && r.user_id === userId ? (
-                            <div className="d-inline float-end">
+                    if (r.user && r.user.username !== undefined) {
+                      return (
+                        <div class="ms-5">
+                          <div class="card-header bg-white"></div>
+                          <div class="card-body">
+                            <h5 class="card-title fw-bold">
                               {" "}
-                              <span class="mx-5">edit</span>
-                              <span class="">delete</span>
-                            </div>
-                          ) : (
-                            ""
-                          )}
+                              {r.user.username}
+                            </h5>
+                            <p class="card-text"> {r.comment}</p>
+                            {userId && r.user_id === userId ? (
+                              <div className="d-inline float-end">
+                                {" "}
+                                <span className="mx-5 review-menu">edit</span>
+                                <span
+                                  className="review-menu"
+                                  onClick={() => onDelete(r.review_id)}
+                                >
+                                  delete
+                                </span>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
+                      );
+                    }
                   }
                 })}
               </div>
@@ -182,6 +234,7 @@ const Review = ({ productId }) => {
           </div>
         );
       })}
+      {/* Ref week 9 lectorial COSC2758 RMIT University */}
     </>
   );
 };

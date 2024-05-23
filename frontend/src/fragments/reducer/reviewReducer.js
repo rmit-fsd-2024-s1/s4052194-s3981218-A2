@@ -14,13 +14,13 @@ export const reviewReducer = (state, action) => {
       case "editReview":
         return {
           ...state,
-          products: [...state.products, payload.products],
+          reviews: [...state.reviews, payload.reviews],
         };
       case "removeReview":
         //filter out
         return {
           ...state,
-          products: payload.newReview,
+          reviews: payload.newReviews,
         };
       default:
         return state;

@@ -65,8 +65,7 @@ export const CartProvider = ({ children, userId }) => {
     //if added successfully
   };
   const removeFromCart = async (item) => {
-    console.log("this is current state", state.products)
-    console.log('this is item passed in', item)
+
     try {
       //call api
       await removeOne(item);
