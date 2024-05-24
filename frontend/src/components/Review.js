@@ -13,11 +13,10 @@ const Review = ({ productId }) => {
     loadingReview,
     createReview,
     removeReview,
+    updateReview,
   } = useReview();
   const { userId } = useCart();
   const [page, setPage] = useState(0);
-  const [showInput, setShowInput] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
   const handleClick = () => {
     setShowInput(true);
   };
@@ -27,22 +26,30 @@ const Review = ({ productId }) => {
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const stars = [1, 2, 3, 4, 5];
+  //comment
   const [comment, setComment] = useState();
-  const [warning, setWarning] = useState(false);
-  const [replyWarning, setReplyWarning] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  //reply
   const [reply, showReply] = useState(false);
   const [reviewReply, setReviewReply] = useState();
   const [replyText, setReplyText] = useState();
   const [success, setSuccess] = useState(false);
-  const [productReviews, setProductReviews] = useState();
+  //edit
+  const [showEdit, setShowEdit] = useState(false);
   const [edit, setEdit] = useState();
   const [editReviewId, setEditReviewId] = useState();
+  //warning
+  const [warning, setWarning] = useState(false);
+  const [replyWarning, setReplyWarning] = useState(false);
+  const [editWarning, setEditWarning] = useState(false);
+  //reviews
+  const [productReviews, setProductReviews] = useState();
   useEffect(() => {
     setProductReviews(getReviewByProductId(productId));
   }, [state, productId, success]);
 
-  const onSubmit = (isEdit, parentId) => {
-    if ((!isEdit && !comment) || (isEdit && !replyText)) {
+  const onSubmit = (isReply, parentId) => {
+    if ((!isReply && !comment) || (isReply && !replyText)) {
       alert("Please type something!");
       return;
     }
@@ -55,7 +62,7 @@ const Review = ({ productId }) => {
       return;
     }
     let review = { user_id: userId, product_id: productId };
-    if (isEdit) {
+    if (isReply) {
       setReplyWarning(false);
       review.score = null;
       review.comment = replyText;
@@ -68,6 +75,7 @@ const Review = ({ productId }) => {
     apiSubmitReview(review);
   };
 
+  //creating a review
   const apiSubmitReview = (review) => {
     try {
       createReview(review);
@@ -79,6 +87,25 @@ const Review = ({ productId }) => {
     } finally {
       showReply(false);
       setShowInput(false);
+    }
+  };
+  //for editing a review
+  const handleEditSubmit = (id, comment) => {
+    if (!comment) {
+      alert("Please type something!");
+      return;
+    }
+    if (comment && comment.trim().split(" ").length > 100) {
+      setEditWarning(true);
+      return;
+    }
+    try {
+      updateReview(id, comment);
+      setEdit("");
+      setShowEdit(false);
+      setEditWarning(false);
+    } catch (err) {
+      console.log(err);
     }
   };
   const onDelete = (id) => {
@@ -135,7 +162,7 @@ const Review = ({ productId }) => {
             {review.parent_id === null ? (
               <div class="card p-3">
                 <div class="card-header bg-white">
-                  <CommentStar rating={review.score} />
+                  <CommentStar rating={review.score} key={review.review_id} />
                 </div>
                 <div class="card-body">
                   <h5 class="card-title fw-bold"> {review.user.username}</h5>
@@ -181,6 +208,7 @@ const Review = ({ productId }) => {
                       </button>
                     </div>
                   )}
+           
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
@@ -211,8 +239,27 @@ const Review = ({ productId }) => {
                             value={edit}
                             onChange={handleEdit}
                           ></textarea>
-                          <button>Submit</button>
-                          <button>Close</button>
+                          <div className="mt-3">
+                            <button
+                              onClick={() =>
+                                handleEditSubmit(review.review_id, edit)
+                              }
+                              className="mx-4"
+                            >
+                              Submit
+                            </button>
+                            <button onClick={() => setShowEdit(false)}>
+                              Close
+                            </button>
+                            {edit ? edit.trim().split(" ").length : 0} word(s)
+                            {editWarning ? (
+                              <p className="text-danger">
+                                Exceeded words limit. Maximum 100 words.{" "}
+                              </p>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                         </>
                       )}
                     </div>
@@ -221,7 +268,7 @@ const Review = ({ productId }) => {
                   )}
                   {/* reply to review part */}
                 </div>
-
+                    {/* edit or delete part */}
                 {productReviews.map((r) => {
                   if (r.parent_id === review.review_id) {
                     if (r.user && r.user.username !== undefined) {
@@ -266,8 +313,31 @@ const Review = ({ productId }) => {
                                       value={edit}
                                       onChange={handleEdit}
                                     ></textarea>
-                                    <button>Submit</button>
-                                    <button>Close</button>
+                                    <div className="mt-2">
+                                      <button
+                                        onClick={() =>
+                                          handleEditSubmit(r.review_id, edit)
+                                        }
+                                        className="mx-4"
+                                      >
+                                        Submit
+                                      </button>
+                                      <button
+                                        onClick={() => setShowEdit(false)}
+                                      >
+                                        Close
+                                      </button>
+                                      {edit ? edit.trim().split(" ").length : 0}{" "}
+                                      word(s)
+                                      {editWarning ? (
+                                        <p className="text-danger">
+                                          Exceeded words limit. Maximum 100
+                                          words.{" "}
+                                        </p>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </div>
                                   </>
                                 )}
                               </div>

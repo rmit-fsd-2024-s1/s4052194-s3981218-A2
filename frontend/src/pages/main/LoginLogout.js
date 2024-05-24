@@ -11,6 +11,7 @@ const LoginLogout = () => {
   const logout = () => {
     removeUser();
     setUsername(null);
+    setUserId(null);
   };
   //get the user id after login
   useEffect(() => {

@@ -4,6 +4,7 @@ import {
   getAllReviews,
   addReview,
   deleteReview,
+  editReview,
 } from "../../services/reviewService";
 import { reviewReducer } from "../reducer/reviewReducer";
 const initialState = {
@@ -47,10 +48,10 @@ const useReview = () => {
       await deleteReview(id);
       //update state
       const reviewUpdate = state.reviews.filter(
-        (review) => review.review_id !== id 
+        (review) => review.review_id !== id
       );
-      const newReviews = reviewUpdate.filter((review)=> 
-        review.parent_id !== id
+      const newReviews = reviewUpdate.filter(
+        (review) => review.parent_id !== id
       );
       dispatch({
         type: "removeReview",
@@ -63,6 +64,24 @@ const useReview = () => {
     }
   };
 
+  const updateReview = async (id, newComment) => {
+    try {
+      let update = state.reviews.map((review) => {
+        return review.review_id === id
+          ? { ...review, comment: newComment }
+          : review;
+      });
+      dispatch({
+        type: "editReview",
+        payload: {
+          reviews: update,
+        },
+      });
+      await editReview(id, newComment);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const createReview = async (review, condition) => {
     try {
       //call api
@@ -89,6 +108,7 @@ const useReview = () => {
     getReviewByProductId,
     createReview,
     removeReview,
+    updateReview
   };
 };
 
