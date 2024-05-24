@@ -1,11 +1,9 @@
 import React, { useCallback, useState } from "react";
-import axios from "axios";
-import { verifySignIn } from "../../services/verify";
 import { useNavigate } from "react-router-dom";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
-import "../../style/signin.css";
 import { useForm } from "../../fragments/customHook/useForm";
-
+import userService from "../../services/userService";
+import "../../style/signin.css";
 
 function SignIn(props) {
   useScrollToTop(); // Custom hook to scroll to the top of the page on component mount
@@ -22,12 +20,10 @@ function SignIn(props) {
     event.preventDefault(); // Prevent default form submission behavior
 
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/signin", {
+      const verifiedUser = await userService.signInUser({
         email: values.email,
         password: values.password,
       });
-
-      const verifiedUser = response.data;
 
       if (verifiedUser) {
         localStorage.setItem("activeUser", JSON.stringify({ user_id: verifiedUser.user_id, name: verifiedUser.username })); // Save active user to localStorage

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { validatePassword } from "../../services/verify";
 import "../../style/myprofilestyle.css";
-import axios from "axios";
 import Swal from "sweetalert2";
+import userService from "../../services/userService";
 
 function MyProfile(props) {
   const navigate = useNavigate();
@@ -23,10 +23,9 @@ function MyProfile(props) {
   useEffect(() => {
     const activeUser = JSON.parse(localStorage.getItem("activeUser"));
     if (activeUser) {
-      axios
-        .get(`http://localhost:4000/api/users/${activeUser.user_id}`)
-        .then((response) => {
-          setUser(response.data);
+      userService.getUserById(activeUser.user_id)
+        .then((data) => {
+          setUser(data);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -63,8 +62,7 @@ function MyProfile(props) {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`http://localhost:4000/api/users/${user.user_id}`)
+        userService.deleteUser(user.user_id)
           .then(() => {
             localStorage.removeItem("activeUser");
             window.location.reload();
@@ -104,16 +102,13 @@ function MyProfile(props) {
       updateData.password = newPassword;
     }
 
-    axios
-      .get(`http://localhost:4000/api/users/username/${user.username}`)
+    userService.checkUsername(user.username)
       .then((response) => {
-        if (response.data.exists && response.data.user_id !== user.user_id) {
+        if (response.exists && response.user_id !== user.user_id) {
           setUsernameError("This username is already used.");
-          return;
         } else {
-          axios
-            .put(`http://localhost:4000/api/users/${user.user_id}`, updateData)
-            .then((response) => {
+          userService.updateUser(user.user_id, updateData)
+            .then(() => {
               localStorage.setItem(
                 "activeUser",
                 JSON.stringify({ user_id: user.user_id, name: user.username })
