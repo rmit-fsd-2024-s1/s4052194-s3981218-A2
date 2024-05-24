@@ -208,6 +208,13 @@ const Review = ({ productId }) => {
                       </button>
                     </div>
                   )}
+                  {console.log(
+                    "current user",
+                    userId,
+                    "review,",
+                    review.user_id
+                  )}
+
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
@@ -239,25 +246,26 @@ const Review = ({ productId }) => {
                             onChange={handleEdit}
                           ></textarea>
                           <div className="mt-3">
-                          <button
-                            onClick={() =>
-                              handleEditSubmit(review.review_id, edit)
-                            }
-                            className="mx-4"
-                          >
-                            Submit
-                          </button>
-                          <button onClick={() => setShowEdit(false)}>
-                            Close
-                          </button>
-                          {edit ? edit.trim().split(" ").length : 0} word(s)
-                          {editWarning ? (
-                            <p className="text-danger">
-                              Exceeded words limit. Maximum 100 words.{" "}
-                            </p>
-                          ) : (
-                            ""
-                          )}</div>
+                            <button
+                              onClick={() =>
+                                handleEditSubmit(review.review_id, edit)
+                              }
+                              className="mx-4"
+                            >
+                              Submit
+                            </button>
+                            <button onClick={() => setShowEdit(false)}>
+                              Close
+                            </button>
+                            {edit ? edit.trim().split(" ").length : 0} word(s)
+                            {editWarning ? (
+                              <p className="text-danger">
+                                Exceeded words limit. Maximum 100 words.{" "}
+                              </p>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                         </>
                       )}
                     </div>
@@ -312,27 +320,29 @@ const Review = ({ productId }) => {
                                       onChange={handleEdit}
                                     ></textarea>
                                     <div className="mt-2">
-                                    <button
-                                      onClick={() =>
-                                        handleEditSubmit(r.review_id, edit)
-                                      }
-                                      className="mx-4"
-                                    >
-                                      Submit
-                                    </button>
-                                    <button onClick={() => setShowEdit(false)}>
-                                      Close
-                                    </button>
-                                    
-                                    {edit ? edit.trim().split(" ").length : 0}{" "}
-                                    word(s)
-                                    {editWarning ? (
-                                      <p className="text-danger">
-                                        Exceeded words limit. Maximum 100 words.{" "}
-                                      </p>
-                                    ) : (
-                                      ""
-                                    )}
+                                      <button
+                                        onClick={() =>
+                                          handleEditSubmit(r.review_id, edit)
+                                        }
+                                        className="mx-4"
+                                      >
+                                        Submit
+                                      </button>
+                                      <button
+                                        onClick={() => setShowEdit(false)}
+                                      >
+                                        Close
+                                      </button>
+                                      {edit ? edit.trim().split(" ").length : 0}{" "}
+                                      word(s)
+                                      {editWarning ? (
+                                        <p className="text-danger">
+                                          Exceeded words limit. Maximum 100
+                                          words.{" "}
+                                        </p>
+                                      ) : (
+                                        ""
+                                      )}
                                     </div>
                                   </>
                                 )}
