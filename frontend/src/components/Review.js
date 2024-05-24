@@ -3,6 +3,9 @@ import { useRef, useState, useEffect } from "react";
 import useReview from "../fragments/customHook/useReview";
 import ReactPaginate from "react-paginate";
 import useCart from "../fragments/context/CartContext";
+import Comment from "./Comment";
+import Star from "./Star";
+import CommentStar from "./CommentStar";
 const Review = ({ productId }) => {
   const {
     state,
@@ -14,11 +17,9 @@ const Review = ({ productId }) => {
   const { userId } = useCart();
   const [page, setPage] = useState(0);
   const [showInput, setShowInput] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const handleClick = () => {
     setShowInput(true);
-  };
-  const handlePageClick = (data) => {
-    setPage(data.selected);
   };
 
   //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
@@ -28,43 +29,56 @@ const Review = ({ productId }) => {
   const stars = [1, 2, 3, 4, 5];
   const [comment, setComment] = useState();
   const [warning, setWarning] = useState(false);
+  const [replyWarning, setReplyWarning] = useState(false);
   const [reply, showReply] = useState(false);
   const [reviewReply, setReviewReply] = useState();
   const [replyText, setReplyText] = useState();
   const [success, setSuccess] = useState(false);
   const [productReviews, setProductReviews] = useState();
+  const [edit, setEdit] = useState();
+  const [editReviewId, setEditReviewId] = useState();
   useEffect(() => {
     setProductReviews(getReviewByProductId(productId));
   }, [state, productId, success]);
-  const onSubmit = (parentId) => {
-    if (
-      comment &&
-      (comment.trim().split(" ").length > 100 ||
-        comment.trim().split(" ").length === 0)
-    ) {
+
+  const onSubmit = (isEdit, parentId) => {
+    if ((!isEdit && !comment) || (isEdit && !replyText)) {
+      alert("Please type something!");
+      return;
+    }
+    if (replyText && replyText.trim().split(" ").length > 100) {
+      setReplyWarning(true);
+      return;
+    }
+    if (comment && comment.trim().split(" ").length > 100) {
       setWarning(true);
+      return;
+    }
+    let review = { user_id: userId, product_id: productId };
+    if (isEdit) {
+      setReplyWarning(false);
+      review.score = null;
+      review.comment = replyText;
+      review.parent_id = parentId;
     } else {
       setWarning(false);
-      let review = { user_id: userId, product_id: productId };
-      if (parentId) {
-        review.score = null;
-        review.comment = replyText;
-        review.parent_id = parentId;
-      } else {
-        review.score = rating;
-        review.comment = comment;
-      }
+      review.score = rating;
+      review.comment = comment;
+    }
+    apiSubmitReview(review);
+  };
 
-      try {
-        createReview(review);
-        setComment("");
-        setReplyText("");
-        setSuccess(true);
-      } catch (err) {
-        setSuccess(false);
-
-        console.log(err);
-      }
+  const apiSubmitReview = (review) => {
+    try {
+      createReview(review);
+      setComment("");
+      setReplyText("");
+      setSuccess(true);
+    } catch (err) {
+      setSuccess(false);
+    } finally {
+      showReply(false);
+      setShowInput(false);
     }
   };
   const onDelete = (id) => {
@@ -77,9 +91,11 @@ const Review = ({ productId }) => {
     return <div>Loading...</div>;
   }
 
+  const handleEdit = (e) => {
+    setEdit(e.target.value);
+  };
   return (
     <>
-      {console.log(productReviews, "current")}
       <div className="mt-5">
         <div className="h4 mt-5 d-inline">Reviews</div>
         {userId && (
@@ -102,35 +118,20 @@ const Review = ({ productId }) => {
               />
             ))}
           </div>
-          <div className="mb-3">
-            <label for="comment" className="form-label"></label>
-            <textarea
-              className="form-control"
-              id="comment"
-              rows="3"
-              value={comment}
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
-            ></textarea>
-            {warning && (
-              <p className="text-danger">
-                Exceeded words limit. Maximum 100 words.{" "}
-              </p>
-            )}
-            {comment ? comment.trim().split(" ").length : 0} word(s)
-            <button onClick={() => onSubmit()}>submit</button>
-            {success && (
-              <p className="text-success">Review submitted successfully. </p>
-            )}
-          </div>
+          <Comment
+            comment={comment}
+            setComment={setComment}
+            warning={warning}
+            success={success}
+            onSubmit={onSubmit}
+          />
         </>
       )}
       <hr className="mt-3" />
       {/* //show all reviews */}
       {productReviews.map((review) => {
         return (
-          <div>
+          <div key={review.review_id}>
             {review.parent_id === null ? (
               <div class="card p-3">
                 <div class="card-header bg-white">
@@ -146,6 +147,8 @@ const Review = ({ productId }) => {
                         className="review-menu mx-5"
                         onClick={() => {
                           showReply(true);
+                          setShowEdit(false);
+                          setShowInput(false);
                           setReviewReply(review.review_id);
                         }}
                       >
@@ -166,14 +169,14 @@ const Review = ({ productId }) => {
                           setReplyText(e.target.value);
                         }}
                       ></textarea>
-                      {warning && (
+                      {replyWarning && (
                         <p className="text-danger">
                           Exceeded words limit. Maximum 100 words.{" "}
                         </p>
                       )}
                       {replyText ? replyText.trim().split(" ").length : 0}{" "}
                       word(s)
-                      <button onClick={() => onSubmit(review.review_id)}>
+                      <button onClick={() => onSubmit(true, review.review_id)}>
                         submit
                       </button>
                     </div>
@@ -181,13 +184,37 @@ const Review = ({ productId }) => {
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
-                      <span className="mx-5 review-menu">edit</span>
+                      <span
+                        className="mx-5 review-menu"
+                        onClick={() => {
+                          setShowEdit(true);
+                          setShowInput(false);
+                          showReply(false);
+                          setEdit(review.comment);
+                          setEditReviewId(review.review_id);
+                        }}
+                      >
+                        edit
+                      </span>
                       <span
                         className="review-menu"
                         onClick={() => onDelete(review.review_id)}
                       >
                         delete
                       </span>
+                      {showEdit && editReviewId === review.review_id && (
+                        <>
+                          <textarea
+                            className="form-control"
+                            id="edit"
+                            rows="3"
+                            value={edit}
+                            onChange={handleEdit}
+                          ></textarea>
+                          <button>Submit</button>
+                          <button>Close</button>
+                        </>
+                      )}
                     </div>
                   ) : (
                     ""
@@ -210,13 +237,39 @@ const Review = ({ productId }) => {
                             {userId && r.user_id === userId ? (
                               <div className="d-inline float-end">
                                 {" "}
-                                <span className="mx-5 review-menu">edit</span>
+                                <span
+                                  className="mx-5 review-menu"
+                                  onClick={() => {
+                                    setShowEdit(true);
+                                    setShowInput(false);
+                                    showReply(false);
+
+                                    setEdit(r.comment);
+                                    setEditReviewId(r.review_id);
+                                  }}
+                                >
+                                  edit
+                                </span>
                                 <span
                                   className="review-menu"
                                   onClick={() => onDelete(r.review_id)}
                                 >
                                   delete
                                 </span>
+                                {showEdit && editReviewId === r.review_id && (
+                                  <>
+                                    <textarea
+                                      className="form-control"
+                                      id="edit"
+                                      rows="3"
+                                      cols="50"
+                                      value={edit}
+                                      onChange={handleEdit}
+                                    ></textarea>
+                                    <button>Submit</button>
+                                    <button>Close</button>
+                                  </>
+                                )}
                               </div>
                             ) : (
                               ""
@@ -234,57 +287,9 @@ const Review = ({ productId }) => {
           </div>
         );
       })}
-      {/* Ref week 9 lectorial COSC2758 RMIT University */}
     </>
   );
 };
 //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
-const Star = ({ starId, rating, onMouseEnter, onMouseLeave, onClick }) => {
-  let styleClass = "star-rating-blank";
-  if (rating >= starId) {
-    styleClass = "star-rating-filled";
-  }
-  return (
-    <div
-      className="star"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-    >
-      <svg
-        className={styleClass}
-        focusable="false"
-        viewBox="0 0 25 24"
-        width="40px"
-        height="33px"
-        aria-label=""
-        tabIndex="0"
-        aria-hidden="true"
-        class="ugc-rr-pip-fe-svg-icon ugc-rr-pip-fe-rating-star-bar__star ugc-rr-pip-fe-rating-star-bar__star--filled"
-      >
-        <path d="m11.9999 6 2.1245 3.6818 4.1255.9018-2.8125 3.1773L15.8626 18l-3.8627-1.7182L8.1372 18l.4252-4.2391-2.8125-3.1773 4.1255-.9018L11.9999 6z"></path>
-      </svg>
-    </div>
-  );
-};
-const CommentStar = ({ rating }) => {
-  const stars = [];
-  for (let i = 0; i < rating; i++) {
-    stars.push(
-      <svg
-        focusable="false"
-        viewBox="0 0 24 24"
-        width="24"
-        height="24"
-        aria-label=""
-        tabIndex="0"
-        aria-hidden="true"
-        class="ugc-rr-pip-fe-svg-icon ugc-rr-pip-fe-rating-star-bar__star ugc-rr-pip-fe-rating-star-bar__star--filled"
-      >
-        <path d="m11.9999 6 2.1245 3.6818 4.1255.9018-2.8125 3.1773L15.8626 18l-3.8627-1.7182L8.1372 18l.4252-4.2391-2.8125-3.1773 4.1255-.9018L11.9999 6z"></path>
-      </svg>
-    );
-  }
-  return <>{stars}</>;
-};
+
 export default Review;

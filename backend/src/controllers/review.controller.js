@@ -17,7 +17,7 @@ exports.getAll = (req, res) => {
 //add a review by user id,product id,  comment and score
 exports.create = async (req, res) => {
   const { comment, score, user_id, product_id, parent_id } = req.body;
-  if (comment.length === 0 || comment.length > 100) {
+  if (comment.length === 0 || comment.trim().split(" ").length > 100) {
     return res
       .status(400)
       .send({ message: "comment length exceeded 100 characters" });
