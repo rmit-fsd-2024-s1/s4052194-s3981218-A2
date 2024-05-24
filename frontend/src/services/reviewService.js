@@ -22,3 +22,13 @@ export async function deleteReview(id) {
   });
   return response.data;
 }
+
+export async function editReview(id, comment) {
+  console.log("id", id);
+  const review = {
+    review_id: id,
+    comment: comment,
+  };
+  const response = await axios.patch(API_HOST + "/api/review", review);
+  return response.data;
+}

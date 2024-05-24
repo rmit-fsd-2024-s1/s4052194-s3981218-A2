@@ -69,10 +69,11 @@ exports.delete = (req, res) => {
 //edit review
 exports.update = (req, res) => {
   //user id, review id, comment or score
-  const { review_id, score, comment } = req.body;
+  const { review_id, comment } = req.body;
+  console.log(review_id)
   db.review
     .update(
-      { score: score, comment: comment },
+      { comment: comment },
       {
         where: {
           review_id: review_id,

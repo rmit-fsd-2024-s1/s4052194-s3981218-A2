@@ -29,11 +29,6 @@ export const cartReducer = (state, action) => {
       }
     default:
       return state;
-    //     }
-    // case "AddToCart":
-    // return {
-    //     ...state,
-    //     products:payload.products;
-    // }
+
   }
 };

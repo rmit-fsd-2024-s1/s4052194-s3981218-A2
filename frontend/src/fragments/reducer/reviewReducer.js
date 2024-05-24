@@ -14,7 +14,7 @@ export const reviewReducer = (state, action) => {
       case "editReview":
         return {
           ...state,
-          reviews: [...state.reviews, payload.reviews],
+          reviews: payload.reviews,
         };
       case "removeReview":
         //filter out

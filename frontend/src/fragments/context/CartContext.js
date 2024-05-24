@@ -88,7 +88,6 @@ export const CartProvider = ({ children, userId }) => {
   //update quantity
   const updateQuantity = async (items, ops) => {
     try {
-      console.log(state.products);
       const cartUpdate = state.products.map((inCart) =>
         inCart.cart_id === items.cart_id &&
         inCart.product_id === items.product_id
@@ -102,7 +101,6 @@ export const CartProvider = ({ children, userId }) => {
           product.cart_id === items.cart_id &&
           product.product_id === items.product_id
       );
-      console.log(item);
       await updateCart(item);
 
       dispatch({
@@ -111,7 +109,6 @@ export const CartProvider = ({ children, userId }) => {
           products: cartUpdate,
         },
       });
-      console.log("after clicking it ", state.products);
     } catch (error) {
       console.log(error.message);
       console.error("Error updating item from cart:", error);
