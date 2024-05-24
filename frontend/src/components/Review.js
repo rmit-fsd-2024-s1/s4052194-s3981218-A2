@@ -162,7 +162,7 @@ const Review = ({ productId }) => {
             {review.parent_id === null ? (
               <div class="card p-3">
                 <div class="card-header bg-white">
-                  <CommentStar rating={review.score} />
+                  <CommentStar rating={review.score} key={review.review_id} />
                 </div>
                 <div class="card-body">
                   <h5 class="card-title fw-bold"> {review.user.username}</h5>
@@ -208,13 +208,7 @@ const Review = ({ productId }) => {
                       </button>
                     </div>
                   )}
-                  {console.log(
-                    "current user",
-                    userId,
-                    "review,",
-                    review.user_id
-                  )}
-
+           
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
@@ -274,7 +268,7 @@ const Review = ({ productId }) => {
                   )}
                   {/* reply to review part */}
                 </div>
-
+                    {/* edit or delete part */}
                 {productReviews.map((r) => {
                   if (r.parent_id === review.review_id) {
                     if (r.user && r.user.username !== undefined) {
