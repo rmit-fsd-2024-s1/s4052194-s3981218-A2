@@ -4,6 +4,7 @@ import { validatePassword } from "../../services/verify";
 import "../../style/myprofilestyle.css";
 import Swal from "sweetalert2";
 import userService from "../../services/userService";
+import profile_image from "../../assets/profile_image.jpg";
 
 function MyProfile(props) {
   const navigate = useNavigate();
@@ -131,80 +132,79 @@ function MyProfile(props) {
   };
 
   return (
-    <div className="container mt-3">
-      <h2>My Profile</h2>
-      <p>Joined on {new Date(user.date_joined).toLocaleDateString()}</p>
-      <form onSubmit={handleSave}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={user.email}
-            disabled
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            value={user.username}
-            onChange={handleUsernameChange}
-          />
-          {usernameError && <p className="text-danger">{usernameError}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="newPassword">New Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="newPassword"
-            value={newPassword}
-            onChange={handleNewPasswordChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm New Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-          />
-        </div>
-        {error && <p className="text-danger">{error}</p>}
-        <div className="my-3 d-flex justify-content-between">
-          <button type="submit" className="btn btn-primary btn-save">
-            Save Changes
-          </button>
-          <div>
-            <button
-              type="button"
-              className="btn btn-secondary ms-3"
-              onClick={() => navigate("/")}
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger ms-3"
-              onClick={handleDelete}
-            >
-              Delete Account
-            </button>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body text-center">
+              <img src={profile_image} className="img-fluid" alt="Profile" />
+              <h3 className="mt-3">{user.username}</h3>
+              <p className="text-muted">@{user.username}</p>
+              <button className="btn btn-danger" onClick={handleDelete}>Delete Account</button>
+              <p className="mt-3"><strong>Member Since:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
+            </div>
           </div>
         </div>
-      </form>
-      {isUpdated && (
-        <div className="text-center">
-          <p>Profile updated successfully!</p>
+        <div className="col-md-8">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">Edit Profile</h3>
+              <form onSubmit={handleSave}>
+                <div className="form-group">
+                  <label htmlFor="username">Username</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    value={user.username}
+                    onChange={handleUsernameChange}
+                  />
+                  {usernameError && <p className="text-danger">{usernameError}</p>}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    value={user.email}
+                    disabled
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={handleNewPasswordChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirm New Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="confirmPassword"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                  />
+                </div>
+                {error && <p className="text-danger">{error}</p>}
+                <button type="submit" className="btn btn-primary btn-save">Save Changes</button>
+              </form>
+              {isUpdated && (
+                <div className="alert alert-success" role="alert">
+                  Profile updated successfully!
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
+
 export default MyProfile;
