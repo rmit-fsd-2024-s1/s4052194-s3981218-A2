@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import useCart from "../fragments/context/CartContext";
 import Comment from "./Comment";
 import Star from "./Star";
+import useFollower from "../fragments/customHook/useFollower";
 import CommentStar from "./CommentStar";
 const Review = ({ productId }) => {
   const {
@@ -17,9 +18,11 @@ const Review = ({ productId }) => {
   } = useReview();
   const { userId } = useCart();
   const [page, setPage] = useState(0);
+  const { state: followerState, following, unfollowing } = useFollower();
   const handleClick = () => {
     setShowInput(true);
   };
+  console.log(followerState.followers);
 
   //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
   //star rating
@@ -47,7 +50,7 @@ const Review = ({ productId }) => {
   useEffect(() => {
     setProductReviews(getReviewByProductId(productId));
   }, [state, productId, success]);
-
+  //submit button
   const onSubmit = (isReply, parentId) => {
     if ((!isReply && !comment) || (isReply && !replyText)) {
       alert("Please type something!");
@@ -75,6 +78,8 @@ const Review = ({ productId }) => {
     apiSubmitReview(review);
   };
 
+  //follow
+  const [buttonFollow, setButtonFollow] = useState("follow");
   //creating a review
   const apiSubmitReview = (review) => {
     try {
@@ -89,6 +94,9 @@ const Review = ({ productId }) => {
       setShowInput(false);
     }
   };
+  const followedList = followerState.followers.map((e) => {
+    return e.user_follower === userId && e.user_followed;
+  });
   //for editing a review
   const handleEditSubmit = (id, comment) => {
     if (!comment) {
@@ -156,6 +164,7 @@ const Review = ({ productId }) => {
       )}
       <hr className="mt-3" />
       {/* //show all reviews */}
+      {console.log(userId)}
       {productReviews.map((review) => {
         return (
           <div key={review.review_id}>
@@ -165,7 +174,20 @@ const Review = ({ productId }) => {
                   <CommentStar rating={review.score} key={review.review_id} />
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title fw-bold"> {review.user.username}</h5>
+                  <div className="d-flex my-2 justify-content-between">
+                    <h5 class="card-title fw-bold"> {review.user.username}</h5>
+                    {/* follow user part */}
+                    {userId !== review.user_id &&
+                      (followedList.includes(review.user_id) ? (
+                        <p className="text-white p-2 fw-bold border border-1 bg-dark">
+                          followed
+                        </p>
+                      ) : (
+                        <p className="text-dark p-2 fw-bold border border-1 bg-white">
+                          follow
+                        </p>
+                      ))}
+                  </div>
                   <p class="card-text d-inline"> {review.comment}</p>
                   {userId && (
                     <div className="d-inline float-end">
@@ -208,7 +230,7 @@ const Review = ({ productId }) => {
                       </button>
                     </div>
                   )}
-           
+
                   {userId && review.user_id === userId ? (
                     <div className="d-inline float-end">
                       {" "}
@@ -268,7 +290,7 @@ const Review = ({ productId }) => {
                   )}
                   {/* reply to review part */}
                 </div>
-                    {/* edit or delete part */}
+                {/* edit or delete part */}
                 {productReviews.map((r) => {
                   if (r.parent_id === review.review_id) {
                     if (r.user && r.user.username !== undefined) {

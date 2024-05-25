@@ -132,7 +132,6 @@ export const CartProvider = ({ children, userId }) => {
     userId,
     checkOut,
   };
-  console.log("latest state", value.state);
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
