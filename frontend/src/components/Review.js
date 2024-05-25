@@ -7,9 +7,14 @@ import Comment from "./Comment";
 import Star from "./Star";
 import useFollower from "../fragments/customHook/useFollower";
 import CommentStar from "./CommentStar";
+import useRatingState from "../fragments/customHook/useRatingState";
+import useCommentState from "../fragments/customHook/useCommentState";
+import useReplyState from "../fragments/customHook/useReplyState";
 import { useScrollToTop } from "../fragments/customHook/useScrollToTop";
+import useEditState from "../fragments/customHook/useEditState";
+import useWarningState from "../fragments/customHook/useWarningState";
 const Review = ({ productId }) => {
-  useScrollToTop()
+  useScrollToTop();
   const {
     state,
     getReviewByProductId,
@@ -19,34 +24,47 @@ const Review = ({ productId }) => {
     updateReview,
   } = useReview();
   const { userId } = useCart();
-  const [page, setPage] = useState(0);
   const { state: followerState, following, unfollowing } = useFollower();
   const handleClick = () => {
     setShowInput(true);
   };
-  console.log(followerState.followers);
-
   //ref https://tutorial101.blogspot.com/2021/10/reactjs-star-rating.html
   //star rating
-  const [rating, setRating] = useState(5);
-  const [hoverRating, setHoverRating] = useState(0);
-  const stars = [1, 2, 3, 4, 5];
+  const { rating, setRating, hoverRating, setHoverRating, stars } =
+    useRatingState();
   //comment
-  const [comment, setComment] = useState();
-  const [showInput, setShowInput] = useState(false);
+  const { comment, setComment, showInput, setShowInput } = useCommentState();
   //reply
-  const [reply, showReply] = useState(false);
-  const [reviewReply, setReviewReply] = useState();
-  const [replyText, setReplyText] = useState();
   const [success, setSuccess] = useState(false);
+  const {
+    reply,
+    showReply,
+    reviewReply,
+    setReviewReply,
+    replyText,
+    setReplyText,
+  } = useReplyState();
   //edit
-  const [showEdit, setShowEdit] = useState(false);
-  const [edit, setEdit] = useState();
-  const [editReviewId, setEditReviewId] = useState();
+
+  const {
+    showEdit,
+    setShowEdit,
+    edit,
+    setEdit,
+    editReviewId,
+    setEditReviewId,
+  } = useEditState();
+
   //warning
-  const [warning, setWarning] = useState(false);
-  const [replyWarning, setReplyWarning] = useState(false);
-  const [editWarning, setEditWarning] = useState(false);
+  const {
+    warning,
+    setWarning,
+    replyWarning,
+    setReplyWarning,
+    editWarning,
+    setEditWarning,
+  } = useWarningState();
+
   //reviews
   const [productReviews, setProductReviews] = useState();
   useEffect(() => {
@@ -80,8 +98,6 @@ const Review = ({ productId }) => {
     apiSubmitReview(review);
   };
 
-  //follow
-  const [buttonFollow, setButtonFollow] = useState("follow");
   //creating a review
   const apiSubmitReview = (review) => {
     try {
@@ -176,7 +192,6 @@ const Review = ({ productId }) => {
       )}
       <hr className="mt-3" />
       {/* //show all reviews */}
-      {console.log(userId)}
       {productReviews.map((review) => {
         return (
           <div key={review.review_id}>
