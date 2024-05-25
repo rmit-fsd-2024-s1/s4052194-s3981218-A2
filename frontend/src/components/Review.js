@@ -7,7 +7,9 @@ import Comment from "./Comment";
 import Star from "./Star";
 import useFollower from "../fragments/customHook/useFollower";
 import CommentStar from "./CommentStar";
+import { useScrollToTop } from "../fragments/customHook/useScrollToTop";
 const Review = ({ productId }) => {
+  useScrollToTop()
   const {
     state,
     getReviewByProductId,
@@ -187,7 +189,8 @@ const Review = ({ productId }) => {
                   <div className="d-flex my-2 justify-content-between">
                     <h5 class="card-title fw-bold"> {review.user.username}</h5>
                     {/* follow user part */}
-                    {userId !== review.user_id &&
+                    {userId &&
+                      userId !== review.user_id &&
                       (followedList.includes(review.user_id) ? (
                         <p
                           className="text-white unfollow p-2 fw-bold border border-1 bg-dark"

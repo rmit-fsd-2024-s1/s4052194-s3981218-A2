@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "../../style/productstyle.css";
 import { useState, useEffect } from "react";
@@ -14,7 +14,6 @@ const Productpage = ({username}) => {
   const { urlId } = useParams();
   const { state, addToCart, userId } = useCart();
   useScrollToTop();
-  //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
   useEffect(() => {
