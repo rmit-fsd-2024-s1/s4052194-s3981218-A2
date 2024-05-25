@@ -29,6 +29,11 @@ module.exports = (db, DataTypes) =>
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
+      blocked_status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       // Don't add the timestamp attributes (updatedAt, createdAt).

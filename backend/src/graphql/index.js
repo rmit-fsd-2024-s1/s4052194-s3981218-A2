@@ -21,7 +21,7 @@ const schema = buildSchema(`
   }
 `);
 
-// Define your resolvers
+// defining the resolvers
 const root = {
   getUsers: async () => {
     return await db.user.findAll();

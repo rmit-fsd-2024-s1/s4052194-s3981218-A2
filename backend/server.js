@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./src/database/index.js");
+const { graphqlHTTP } = require("express-graphql");
+const { schema, root } = require("./src/graphql");
 
 // Database will be sync'ed in the background.
 db.sync();
@@ -12,6 +14,16 @@ app.use(express.json());
 
 // Add CORS suport.
 app.use(cors());
+
+// GraphQL setup
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
 
 // Add routes.
 require("./src/routes/cart.routes.js")(express, app);
