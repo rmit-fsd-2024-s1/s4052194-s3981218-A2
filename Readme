@@ -1,0 +1,5 @@
+1. Run the server
+2. Inside the backend/src/database/index.js, please uncomment the "seedData();". After the data is available in the database,
+please comment it back.
+3. You should see the normal products and special products.
+4. Please make sure that the app is not crashing during this process. If it's being crashed, try to restart the server again.
