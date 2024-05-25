@@ -24,21 +24,21 @@ const useFollower = () => {
       } catch (err) {
         console.log(err);
       }
-      console.log('run')
+      console.log("run");
     };
     fetchInitData();
   }, []);
 
-  const following = async (user_follower, user_followed) => {
+  const following = async (fol, unfol) => {
     try {
-      await follow(user_follower, user_followed);
+      await follow(fol, unfol);
       //update state
       dispatch({
         type: "follow",
         payload: {
           followers: {
-            user_follower: user_follower,
-            user_followed: user_followed,
+            user_follower: fol,
+            user_followed: unfol,
           },
         },
       });
@@ -47,16 +47,13 @@ const useFollower = () => {
     }
     //if added successfully
   };
-  const unfollowing = async (user_follower, user_followed) => {
+  const unfollowing = async (fol, unfol) => {
     try {
       //call api
-      await unFollow(user_follower, user_followed);
-      //update state
+      await unFollow(fol, unfol);
       const followUpdate = state.followers.filter(
-        (f) =>
-          f.user_follower !== user_follower && f.user_followed !== user_followed
+        (f) => !(f.user_follower === fol && f.user_followed === unfol)
       );
-      console.log("xxx", followUpdate);
       dispatch({
         type: "unFollow",
         payload: {
@@ -67,7 +64,7 @@ const useFollower = () => {
       console.error("Error unfollowing :", error);
     }
   };
-  return { state,following,unfollowing };
+  return { state, following, unfollowing };
 };
 
 export default useFollower;

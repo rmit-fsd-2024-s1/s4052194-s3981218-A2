@@ -121,6 +121,16 @@ const Review = ({ productId }) => {
       removeReview(id);
     }
   };
+
+  const handleFollow = (action, reviewUserId) => {
+    if (action === "unfollow") {
+      window.confirm("You sure you want to unfollow?") &&
+        unfollowing(userId, reviewUserId);
+    } else {
+      window.confirm("You sure you want to unfollow?") &&
+        following(userId, reviewUserId);
+    }
+  };
   //loading reviews
   if (loadingReview) {
     return <div>Loading...</div>;
@@ -179,11 +189,19 @@ const Review = ({ productId }) => {
                     {/* follow user part */}
                     {userId !== review.user_id &&
                       (followedList.includes(review.user_id) ? (
-                        <p className="text-white p-2 fw-bold border border-1 bg-dark">
+                        <p
+                          className="text-white unfollow p-2 fw-bold border border-1 bg-dark"
+                          onClick={() =>
+                            handleFollow("unfollow", review.user_id)
+                          }
+                        >
                           followed
                         </p>
                       ) : (
-                        <p className="text-dark p-2 fw-bold border border-1 bg-white">
+                        <p
+                          className="text-dark follow p-2 fw-bold border border-1 bg-white"
+                          onClick={() => handleFollow(null, review.user_id)}
+                        >
                           follow
                         </p>
                       ))}
