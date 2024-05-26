@@ -84,6 +84,8 @@ const Review = ({ productId }) => {
       setWarning(true);
       return;
     }
+  
+
     let review = { user_id: userId, product_id: productId };
     if (isReply) {
       setReplyWarning(false);
