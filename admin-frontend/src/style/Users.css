@@ -48,15 +48,15 @@
     transition: background-color 0.3s;
   }
   
-  .admin-table td button:hover {
+  /* .admin-table td button:hover {
     background-color: #e65b54;
-  }
+  } */
   
-  .admin-table td button.unblock {
+  /* .admin-table td button.unblock {
     background-color: #4CAF50;
-  }
+  } */
   
-  .admin-table td button.unblock:hover {
+  /* .admin-table td button.unblock:hover {
     background-color: #45a049;
-  }
+  } */
   

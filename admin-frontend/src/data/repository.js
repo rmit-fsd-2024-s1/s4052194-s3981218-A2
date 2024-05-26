@@ -72,5 +72,5 @@ export async function getOwners() {
 }
 
 export async function deleteOwner() {
-  // Placeholder function
+  // 
 }
