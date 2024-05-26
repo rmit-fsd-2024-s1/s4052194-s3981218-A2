@@ -18,11 +18,11 @@ exports.signIn = async (req, res) => {
       });
     }
 
-    if (user.blocked_status) {
-      return res.status(403).send({
-        message: "User is blocked. Please contact support.",
-      });
-    }
+    // if (user.blocked_status) {
+    //   return res.status(403).send({
+    //     message: "User is blocked. Please contact support.",
+    //   });
+    // }
 
     const passwordIsValid = bcrypt.compareSync(password, user.password_hash);
     if (!passwordIsValid) {
