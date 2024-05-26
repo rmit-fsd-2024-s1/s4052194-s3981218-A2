@@ -8,6 +8,7 @@ const LoginLogout = () => {
   const loginUser = (username) => {
     setUsername(username);
   };
+
   const logout = () => {
     removeUser();
     setUsername(null);
@@ -31,7 +32,7 @@ const LoginLogout = () => {
     };
     getId();
   }, [username]);
-  return { username, loginUser, logout, userId };
+  return { username, loginUser, logout, userId};
 };
 
 export default LoginLogout;

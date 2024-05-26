@@ -8,14 +8,16 @@ import useProducts from "../../fragments/context/ProductContext";
 import useCart from "../../fragments/context/CartContext";
 import { getAllReviews } from "../../services/reviewService";
 import useReview from "../../fragments/customHook/useReview";
+import userService from "../../services/userService";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
-const Productpage = ({username}) => {
+const Productpage = ({ username }) => {
   const { specialProducts, products, loading } = useProducts();
   const { urlId } = useParams();
   const { state, addToCart, userId } = useCart();
   useScrollToTop();
   const [isDisabled, setIsDisabled] = useState(false);
   //    setIsDisabled(true);
+  const [block, setIsBlock] = useState();
   useEffect(() => {
     state.products.map((item) => {
       if (item.product_id === parseInt(urlId, 10)) {
@@ -23,6 +25,20 @@ const Productpage = ({username}) => {
       }
     });
   }, [state]);
+  //get block
+  useEffect(() => {
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+    if (activeUser) {
+      userService
+        .getUserById(activeUser.user_id)
+        .then((data) => {
+          setIsBlock(data.blocked_status);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [userId]);
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -39,7 +55,7 @@ const Productpage = ({username}) => {
 
   const getSpecialId = specialProducts.map((e) => e.product_id);
   const isSpecial = getSpecialId.includes(product_id);
-
+  console.log(userId,"is ",block);
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
@@ -96,7 +112,7 @@ const Productpage = ({username}) => {
             )}
           </div>{" "}
         </div>
-        <Review productId={parseInt(urlId, 10)} ></Review>
+        <Review productId={parseInt(urlId, 10)} block={block}></Review>
       </div>
       <div className="addspace"></div>
     </div>

@@ -38,7 +38,7 @@ const Main = () => {
             <Header username={username} logout={logout}/>
             {useScrollToTop()}
             <Routes>
-              <Route path="/login" element={<Signin loginUser={loginUser} />} />
+              <Route path="/login" element={<Signin loginUser={loginUser}/>} />
               <Route path="/Register" element={<SignUp loginUser={loginUser} />} />
               <Route path="/profile" element={<Myprofile />} />
               <Route path="/dietplanpage" element={<DietPlanPage />} />
@@ -57,7 +57,7 @@ const Main = () => {
               <Route path="/shop-online" element={<ShopOnline />} />
               <Route path="/checkout" element={<Checkout/>} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/product-page/:urlId" element={<ProductPage/>} />
+              <Route path="/product-page/:urlId" element={<ProductPage />} />
               <Route path="/thankyou" element={<Thankyou />} />
             </Routes>
             <Footer />

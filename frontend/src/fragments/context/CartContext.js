@@ -38,7 +38,6 @@ export const CartProvider = ({ children, userId }) => {
         dispatch({
           type: "reset",
         });
-        console.error("Error fetching cart data:", error);
       }
     };
     fetchInitData();

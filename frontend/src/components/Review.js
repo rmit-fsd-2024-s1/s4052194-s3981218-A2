@@ -13,7 +13,7 @@ import useReplyState from "../fragments/customHook/useReplyState";
 import { useScrollToTop } from "../fragments/customHook/useScrollToTop";
 import useEditState from "../fragments/customHook/useEditState";
 import useWarningState from "../fragments/customHook/useWarningState";
-const Review = ({ productId }) => {
+const Review = ({ productId, block }) => {
   useScrollToTop();
   const {
     state,
@@ -84,7 +84,6 @@ const Review = ({ productId }) => {
       setWarning(true);
       return;
     }
-  
 
     let review = { user_id: userId, product_id: productId };
     if (isReply) {
@@ -163,10 +162,12 @@ const Review = ({ productId }) => {
     <>
       <div className="mt-5">
         <div className="h4 mt-5 d-inline">Reviews</div>
-        {userId && (
+        {userId && !block ? (
           <button className="d-inline mx-5" onClick={handleClick}>
             Write a review
           </button>
+        ) : (
+         <p> Bad behavior. You are blocked. You can't write a review. </p>
         )}
       </div>
       {showInput && (
@@ -227,7 +228,7 @@ const Review = ({ productId }) => {
                       ))}
                   </div>
                   <p class="card-text d-inline"> {review.comment}</p>
-                  {userId && (
+                  {userId && !block && (
                     <div className="d-inline float-end">
                       {" "}
                       <span
