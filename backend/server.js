@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./src/database/index.js");
 const { graphqlHTTP } = require("express-graphql");
-const { schema, root } = require("./src/graphql");
+const db = require("./src/database/index.js");
+const graphql = require("./src/graphql/schema");
 
 // Database will be sync'ed in the background.
 db.sync();
@@ -12,16 +12,16 @@ const app = express();
 // Parse requests of content-type - application/json.
 app.use(express.json());
 
-// Add CORS suport.
+// Add CORS support.
 app.use(cors());
 
 // GraphQL setup
 app.use(
   "/graphql",
   graphqlHTTP({
-    schema: schema,
-    rootValue: root,
-    graphiql: true,
+    schema: graphql.schema,
+    rootValue: graphql.root,
+    graphiql: true
   })
 );
 
