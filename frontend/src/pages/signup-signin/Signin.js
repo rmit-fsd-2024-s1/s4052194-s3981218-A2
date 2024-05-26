@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useScrollToTop } from "../../fragments/customHook/useScrollToTop";
 import { useForm } from "../../fragments/customHook/useForm";
@@ -10,6 +10,7 @@ function SignIn(props) {
 
   const navigate = useNavigate(); // Hook to programmatically navigate to different routes
   const [isSignedIn, setIsSignedIn] = useState(null); // State to track sign-in status
+  const [errorMessage, setErrorMessage] = useState(""); // State to track error message
 
   const { values, handleChange, resetForm } = useForm({
     email: "",
@@ -37,6 +38,7 @@ function SignIn(props) {
       }
     } catch (error) {
       console.error("Error signing in:", error);
+      setErrorMessage(error.response?.data?.message || "Invalid email or password"); // Set the error message from the response
       setIsSignedIn(false); // Set sign-in status to false if verification fails
     }
   };
@@ -81,7 +83,7 @@ function SignIn(props) {
             )}
             {isSignedIn === false && (
               <div className="text-center mt-3">
-                <p>Invalid email or password</p> {/* Display invalid credentials message */}
+                <p>{errorMessage || "Invalid email or password"}</p> {/* Display invalid credentials message or error message */}
               </div>
             )}
           </form>

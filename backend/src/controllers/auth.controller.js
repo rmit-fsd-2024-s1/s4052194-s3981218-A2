@@ -1,8 +1,7 @@
-//For authentication of the signin user
 const db = require("../database");
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 
-exports.signIn = (req, res) => {
+exports.signIn = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -11,33 +10,35 @@ exports.signIn = (req, res) => {
     });
   }
 
-  db.user
-    .findOne({
-      where: { email },
-    })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({
-          message: "User not found.",
-        });
-      }
-
-      const passwordIsValid = bcrypt.compareSync(password, user.password_hash);
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          message: "Invalid password.",
-        });
-      }
-
-      res.send({
-        user_id: user.user_id,
-        username: user.username,
+  try {
+    const user = await db.user.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
       });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while signing in.",
+    }
+
+    if (user.blocked_status) {
+      return res.status(403).send({
+        message: "User is blocked. Please contact support.",
       });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(password, user.password_hash);
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid Password!",
+      });
+    }
+
+    res.status(200).send({
+      user_id: user.user_id,
+      username: user.username,
+      email: user.email,
     });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Some error occurred while signing in.",
+    });
+  }
 };
