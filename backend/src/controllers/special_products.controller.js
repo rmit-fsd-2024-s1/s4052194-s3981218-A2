@@ -43,8 +43,10 @@ exports.getSpecialProductById = (req, res) => {
 
 // Create a new special product
 exports.createSpecialProduct = (req, res) => {
+  const { product_id } = req.body;
+
   db.special_product
-    .create({})
+    .create({product_id})
     .then((data) => {
       res.send(data);
     })

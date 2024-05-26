@@ -89,11 +89,8 @@ db.review.belongsTo(db.review, {
 db.sync = async () => {
   // Sync schema.
   await db.sequelize.sync();
-
-  // Can sync with force if the schema has become out of date - note that syncing with force is a destructive operation.
-  // await db.sequelize.sync({ force: true });
-
-  // await seedData();
+  //please uncomment this below line, after that comment it and restart the server again
+  //  await seedData();
 };
 
 async function seedData() {
@@ -199,6 +196,7 @@ async function seedData() {
       product_stock: 10,
       product_image: "/Seeding tray.png"  },
   ]);
+  db.special_product.bulkCreate([{ product_id: 2},{ product_id: 4},{ product_id: 6},{ product_id: 1},{ product_id: 7}])
   // Only seed data if necessary.
 }
 
