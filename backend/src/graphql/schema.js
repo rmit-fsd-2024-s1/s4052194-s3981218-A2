@@ -1,4 +1,5 @@
 const { buildSchema } = require('graphql');
+const db = require('../database');
 
 const schema = buildSchema(`
   type User {
@@ -43,11 +44,5 @@ const root = {
     return user;
   },
 };
-unblockUser; async ({user_name}) => {
-    const user = await db.unblockUser.findAll(user_id);
-    if (!user) throw new Error("User not found");
-    user.buildSchema =true;
-    await 
-}
 
 module.exports = { schema, root };
