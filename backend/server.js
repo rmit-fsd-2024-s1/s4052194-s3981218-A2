@@ -1,42 +1,51 @@
+const { ApolloServer } = require("apollo-server-express");
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 const express = require("express");
+const http = require("http");
 const cors = require("cors");
-const { graphqlHTTP } = require("express-graphql");
-const db = require("./src/database/index.js");
-const graphql = require("./src/graphql/schema");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+
+// GraphQL schema and resolvers.
+const { typeDefs, resolvers } = require("./src/graphql/index.js");
 
 // Database will be sync'ed in the background.
+const db = require("./src/database");
 db.sync();
 
-const app = express();
+async function startApolloServer(typeDefs, resolvers) {
+  const app = express();
+  const httpServer = http.createServer(app);
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-// Parse requests of content-type - application/json.
-app.use(express.json());
+  // Setup Apollo server.
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      // Proper shutdown for the HTTP server.
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+    ],
+  });
+  
+  await server.start();
+  server.applyMiddleware({ app });
 
-// Add CORS support.
-app.use(cors());
+  // Add other Express middleware here, if needed
+  app.use(express.json());
+  app.use(cors());
 
-// GraphQL setup
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema: graphql.schema,
-    rootValue: graphql.root,
-    graphiql: true
-  })
-);
 
-// Add routes.
-require("./src/routes/cart.routes.js")(express, app);
-require("./src/routes/order.routes.js")(express, app);
-require("./src/routes/review.routes.js")(express, app);
-require("./src/routes/user.routes.js")(express, app);
-require("./src/routes/special_products.routes.js")(express, app);
-require("./src/routes/follower.routes.js")(express, app);
-require("./src/routes/product.routes.js")(express, app);
-require("./src/routes/auth.routes.js")(express, app);
+  require("./src/routes/cart.routes.js")(express, app);
+  require("./src/routes/order.routes.js")(express, app);
+  require("./src/routes/review.routes.js")(express, app);
+  require("./src/routes/user.routes.js")(express, app);
+  require("./src/routes/special_products.routes.js")(express, app);
+  require("./src/routes/follower.routes.js")(express, app);
+  require("./src/routes/product.routes.js")(express, app);
+  require("./src/routes/auth.routes.js")(express, app);
 
-// Set port, listen for requests.
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+  const PORT = 4000;
+  await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+}
+
+startApolloServer(typeDefs, resolvers);

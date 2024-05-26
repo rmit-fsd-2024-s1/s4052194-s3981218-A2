@@ -1,36 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import client from '../services/graphqlClient';
-import { gql } from 'graphql-request';
+import { getUsers, blockUser, unblockUser } from '../data/repository';
 import '../style/Users.css';
-
-const GET_USERS = gql`
-  query {
-    users {
-      user_id
-      username
-      email
-      blocked_status
-    }
-  }
-`;
-
-const BLOCK_USER = gql`
-  mutation blockUser($user_id: Int!) {
-    blockUser(user_id: $user_id) {
-      user_id
-      blocked_status
-    }
-  }
-`;
-
-const UNBLOCK_USER = gql`
-  mutation unblockUser($user_id: Int!) {
-    unblockUser(user_id: $user_id) {
-      user_id
-      blocked_status
-    }
-  }
-`;
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -38,8 +8,8 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const data = await client.request(GET_USERS);
-        setUsers(data.users);
+        const users = await getUsers();
+        setUsers(users);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -50,9 +20,9 @@ const Users = () => {
 
   const handleBlockUser = async (user_id) => {
     try {
-      await client.request(BLOCK_USER, { user_id });
-      const data = await client.request(GET_USERS);
-      setUsers(data.users);
+      await blockUser(user_id);
+      const users = await getUsers();
+      setUsers(users);
     } catch (error) {
       console.error('Error blocking user:', error);
     }
@@ -60,16 +30,16 @@ const Users = () => {
 
   const handleUnblockUser = async (user_id) => {
     try {
-      await client.request(UNBLOCK_USER, { user_id });
-      const data = await client.request(GET_USERS);
-      setUsers(data.users);
+      await unblockUser(user_id);
+      const users = await getUsers();
+      setUsers(users);
     } catch (error) {
       console.error('Error unblocking user:', error);
     }
   };
 
   return (
-    <div className="admin-container">
+    <div>
       <h2>User Block Management</h2>
       <table className="admin-table">
         <thead>
@@ -88,7 +58,7 @@ const Users = () => {
               <td>{user.blocked_status ? 'Blocked' : 'Active'}</td>
               <td>
                 {user.blocked_status ? (
-                  <button className="unblock" onClick={() => handleUnblockUser(user.user_id)}>Unblock</button>
+                  <button onClick={() => handleUnblockUser(user.user_id)}>Unblock</button>
                 ) : (
                   <button onClick={() => handleBlockUser(user.user_id)}>Block</button>
                 )}
