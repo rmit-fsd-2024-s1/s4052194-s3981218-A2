@@ -17,6 +17,7 @@ const typeDefs = gql`
     product_price: Float!
     product_stock: Int!
     product_image: String!
+    is_special: Boolean!
   }
 
   type Review {
@@ -41,6 +42,8 @@ const typeDefs = gql`
     createProduct(product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
     updateProduct(product_id: Int!, product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
     deleteProduct(product_id: Int!): Product
+    markSpecialProduct(product_id: Int!): Product
+    unmarkSpecialProduct(product_id: Int!): Product
   }
 `;
 
@@ -49,8 +52,25 @@ const resolvers = {
     users: async () => await db.user.findAll(),
     user: async (parent, { user_id }) => await db.user.findByPk(user_id),
     reviews: async () => await db.review.findAll({ include: [db.user, db.product] }),
-    products: async () => await db.product.findAll(),
-    product: async (parent, { product_id }) => await db.product.findByPk(product_id),
+    products: async () => {
+      const products = await db.product.findAll();
+      const specialProducts = await db.special_product.findAll();
+      const specialProductIds = specialProducts.map(sp => sp.product_id);
+
+      return products.map(product => ({
+        ...product.toJSON(),
+        is_special: specialProductIds.includes(product.product_id)
+      }));
+    },
+    product: async (parent, { product_id }) => {
+      const product = await db.product.findByPk(product_id);
+      if (!product) return null;
+      const specialProduct = await db.special_product.findOne({ where: { product_id } });
+      return {
+        ...product.toJSON(),
+        is_special: !!specialProduct
+      };
+    }
   },
   Mutation: {
     blockUser: async (parent, { user_id }) => {
@@ -93,6 +113,24 @@ const resolvers = {
       await product.destroy();
       return product;
     },
+    markSpecialProduct: async (parent, { product_id }) => {
+      await db.special_product.create({ product_id });
+      const product = await db.product.findByPk(product_id);
+      return {
+        ...product.toJSON(),
+        is_special: true
+      };
+    },
+    unmarkSpecialProduct: async (parent, { product_id }) => {
+      const specialProduct = await db.special_product.findOne({ where: { product_id } });
+      if (!specialProduct) throw new Error('Special Product not found');
+      await specialProduct.destroy();
+      const product = await db.product.findByPk(product_id);
+      return {
+        ...product.toJSON(),
+        is_special: false
+      };
+    }
   }
 };
 

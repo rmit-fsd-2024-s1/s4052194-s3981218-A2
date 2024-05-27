@@ -96,6 +96,7 @@ export async function getProducts() {
         product_price
         product_stock
         product_image
+        is_special
       }
     }
   `;
@@ -113,6 +114,7 @@ export async function getProduct(product_id) {
         product_price
         product_stock
         product_image
+        is_special
       }
     }
   `;
@@ -130,6 +132,7 @@ export async function createProduct(product) {
         product_price
         product_stock
         product_image
+        is_special
       }
     }
   `;
@@ -147,6 +150,7 @@ export async function updateProduct(product_id, product) {
         product_price
         product_stock
         product_image
+        is_special
       }
     }
   `;
@@ -160,16 +164,40 @@ export async function deleteProduct(product_id) {
     mutation ($product_id: Int!) {
       deleteProduct(product_id: $product_id) {
         product_id
-        product_name
-        product_price
-        product_stock
-        product_image
       }
     }
   `;
 
   const data = await request(GRAPH_QL_URL, mutation, { product_id });
   return data.deleteProduct;
+}
+
+export async function markSpecialProduct(product_id) {
+  const mutation = gql`
+    mutation ($product_id: Int!) {
+      markSpecialProduct(product_id: $product_id) {
+        product_id
+        is_special
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, mutation, { product_id });
+  return data.markSpecialProduct;
+}
+
+export async function unmarkSpecialProduct(product_id) {
+  const mutation = gql`
+    mutation ($product_id: Int!) {
+      unmarkSpecialProduct(product_id: $product_id) {
+        product_id
+        is_special
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, mutation, { product_id });
+  return data.unmarkSpecialProduct;
 }
 
 // --- Owners -------------------------------------------------------------------------------------
