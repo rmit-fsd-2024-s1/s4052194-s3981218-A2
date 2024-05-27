@@ -1,7 +1,9 @@
 const { gql } = require('apollo-server-express');
 const db = require('../database');
 
-const typeDefs = gql`
+// defining the schema
+
+const schema = buildSchema(`
   type User {
     user_id: Int!
     username: String!
@@ -45,7 +47,7 @@ const typeDefs = gql`
     markSpecialProduct(product_id: Int!): Product
     unmarkSpecialProduct(product_id: Int!): Product
   }
-`;
+`);
 
 const resolvers = {
   Query: {
