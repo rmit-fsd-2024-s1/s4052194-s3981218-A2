@@ -132,7 +132,6 @@ export async function createProduct(product) {
         product_price
         product_stock
         product_image
-        is_special
       }
     }
   `;
@@ -198,30 +197,4 @@ export async function unmarkSpecialProduct(product_id) {
 
   const data = await request(GRAPH_QL_URL, mutation, { product_id });
   return data.unmarkSpecialProduct;
-}
-
-// --- Owners -------------------------------------------------------------------------------------
-
-export async function createOwner() {
-  // Implement your GraphQL mutation here
-}
-
-export async function getOwnerExists() {
-  // Implement your GraphQL query here
-}
-
-export async function getOwner() {
-  // Implement your GraphQL query here
-}
-
-export async function updateOwner() {
-  // Implement your GraphQL mutation here
-}
-
-export async function getOwners() {
-  // Implement your GraphQL query here
-}
-
-export async function deleteOwner() {
-  // Implement your GraphQL mutation here
 }

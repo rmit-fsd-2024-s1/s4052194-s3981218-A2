@@ -1,16 +1,18 @@
 .admin-container {
-    background-color: #f4f4f9;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Courier New', Courier, monospace;
-    color: #333;
+  background-color: #f4f4f9;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  font-size:large;
   }
   
   .admin-container h2 {
     text-align: center;
-    color: #ff6f61;
+    color: rgb(0, 159, 127);
     margin-bottom: 1.5rem;
+    font-weight: 600;
   }
 
   
@@ -40,17 +42,15 @@
   }
   
   .admin-table td button {
-    background-color: #ff6f61;
+    background-color: rgb(0, 159, 127);
     color: white;
     border: none;
-    padding: 0.25rem 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 5px;
-    /* font-size: 0.875rem; */
-    margin-top: 0.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
   }
   
   .admin-table td button:hover {
-    background-color: #e65b54;
+    background-color: #526f64;
   }
