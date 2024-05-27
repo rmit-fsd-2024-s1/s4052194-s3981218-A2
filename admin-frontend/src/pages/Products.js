@@ -87,6 +87,51 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
+        <tr>
+            <td>
+              <input
+                type="text"
+                value={newProduct.product_name}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, product_name: e.target.value })
+                }
+                placeholder="Product Name"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value={newProduct.product_price}
+                onChange={(e) =>
+                  setNewProduct({
+                    ...newProduct,
+                    product_price: parseFloat(e.target.value),
+                  })
+                }
+                placeholder="Product Price"
+              />
+            </td>
+            <td>
+              <input type="text" value="" placeholder="null.png" disabled />
+            </td>
+            <td>
+              <input
+                type="number"
+                value={newProduct.product_stock}
+                onChange={(e) =>
+                  setNewProduct({
+                    ...newProduct,
+                    product_stock: parseInt(e.target.value),
+                  })
+                }
+                placeholder="Product Stock"
+              />
+            </td>
+            <td></td>
+            <td>
+              <button onClick={handleCreateProduct}>Add Product</button>
+            </td>
+          </tr>
           {products.map((product) => (
             <tr key={product.product_id}>
               {editingProductId === product.product_id ? (
@@ -182,51 +227,7 @@ const Products = () => {
               )}
             </tr>
           ))}
-          <tr>
-            <td>
-              <input
-                type="text"
-                value={newProduct.product_name}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, product_name: e.target.value })
-                }
-                placeholder="Product Name"
-              />
-            </td>
-            <td>
-              <input
-                type="number"
-                value={newProduct.product_price}
-                onChange={(e) =>
-                  setNewProduct({
-                    ...newProduct,
-                    product_price: parseFloat(e.target.value),
-                  })
-                }
-                placeholder="Product Price"
-              />
-            </td>
-            <td>
-              <input type="text" value="" placeholder="null.png" disabled />
-            </td>
-            <td>
-              <input
-                type="number"
-                value={newProduct.product_stock}
-                onChange={(e) =>
-                  setNewProduct({
-                    ...newProduct,
-                    product_stock: parseInt(e.target.value),
-                  })
-                }
-                placeholder="Product Stock"
-              />
-            </td>
-            <td></td>
-            <td>
-              <button onClick={handleCreateProduct}>Add Product</button>
-            </td>
-          </tr>
+       
         </tbody>
       </table>
     </div>
