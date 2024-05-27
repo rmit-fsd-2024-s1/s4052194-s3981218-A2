@@ -24,8 +24,6 @@ const ShopOnline = () => {
         <div className="my-5"></div>
         <ProductList
           list={products}
-          // handleClick={handleClick}
-          // addSuccess={addSuccess}
         />
       </div>
     </div>

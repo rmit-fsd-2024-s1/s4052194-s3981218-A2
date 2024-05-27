@@ -2,16 +2,34 @@ import { React, useState, useEffect } from "react";
 import { getData } from "../../services/repository";
 import { Link } from "react-router-dom";
 import useCart from "../../fragments/context/CartContext";
+import { useNavigate } from "react-router-dom";
 const Thankyou = () => {
-  const {state,checkOut,userId} = useCart();
+  const { state, checkOut, userId } = useCart();
   //remove the items from the cart/db
-  const [receipt,setReceipt] = useState([]);
+  const [receipt, setReceipt] = useState([]);
+  const navigate = useNavigate();
+  const [status, setStatus] = useState(false);
   //reset
-  useEffect( () => {
-    setReceipt(state.products)
-    checkOut();
+
+  useEffect(() => {
+    const checkOutResult = async () => {
+      try {
+        const status = await checkOut();
+        if (status !== "success") {
+          alert(status);
+          setStatus(false);
+          return navigate("/cart");
+        } else {
+          setStatus(true);
+          setReceipt(state.products);
+        }
+      } catch (error) {
+        console.log("An error occurred during checkout.");
+      }
+    };
+    checkOutResult();
   }, [userId]);
-  return (  
+  return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">
         <ol className="breadcrumb ms-2">
@@ -29,6 +47,7 @@ const Thankyou = () => {
           </li>
         </ol>
       </nav>
+      {status && (
         <div className="container mt-3 mb-5 p-5">
           <h2>Thank you for your purchase</h2>
           <h4>Your order was completed successfully</h4>
@@ -69,6 +88,7 @@ const Thankyou = () => {
             </div>
           </div>
         </div>
+      )}
     </div>
   );
 };

@@ -172,7 +172,7 @@ const Review = ({ productId, block }) => {
           <button className="d-inline mx-5" onClick={handleClick}>
             Write a review
           </button>
-        ) : (
+        ) : (userId &&
           <p> Bad behavior. You are blocked. You can't write a review. </p>
         )}
       </div>
@@ -276,7 +276,9 @@ const Review = ({ productId, block }) => {
                     </div>
                   )}
 
-                  {userId && review.user_id === userId && !isDeleted(review.comment) ? (
+                  {userId &&
+                  review.user_id === userId &&
+                  !isDeleted(review.comment) ? (
                     <div className="d-inline float-end">
                       {" "}
                       <span
@@ -348,7 +350,9 @@ const Review = ({ productId, block }) => {
                               {r.user.username}
                             </h5>
                             <p class="card-text"> {r.comment}</p>
-                            {userId && r.user_id === userId && !isDeleted(r.comment) ? (
+                            {userId &&
+                            r.user_id === userId &&
+                            !isDeleted(r.comment) ? (
                               <div className="d-inline float-end">
                                 {" "}
                                 <span

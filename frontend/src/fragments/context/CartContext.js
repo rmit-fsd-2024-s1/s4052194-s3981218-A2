@@ -14,6 +14,8 @@ import {
 } from "../../services/cartService";
 import { useNavigate } from "react-router-dom";
 import { cartReducer } from "../reducer/cartReducer";
+import { getProductById } from "../../services/productService";
+import { updateProduct } from "../../services/productService";
 const CartContext = createContext();
 
 const initialState = {
@@ -64,16 +66,13 @@ export const CartProvider = ({ children, userId }) => {
     //if added successfully
   };
   const removeFromCart = async (item) => {
-
     try {
       //call api
       await removeOne(item);
       //update state
       const cartUpdate = state.products.filter(
-        (inCart) =>
-          inCart.product_id !== item.product_id
+        (inCart) => inCart.product_id !== item.product_id
       );
-      console.log('xxx',cartUpdate)
       dispatch({
         type: "removeOne",
         payload: {
@@ -115,9 +114,21 @@ export const CartProvider = ({ children, userId }) => {
   };
   //checked out successfully then we'll reset state and remove items from db
   const checkOut = async () => {
-    dispatch({ type: "reset" });
     try {
+      for (let i of state.products) {
+        let temp = await getProductById(i.product_id);
+        if (i.quantity > temp.product_stock)
+          return `${i.product.product_name} has ${temp.product_stock} in stock. Please check your quantity again`;
+      }
+      for (let i of state.products) {
+        let temp = await getProductById(i.product_id);
+        temp.product_stock -= i.quantity;
+        console.log(temp);
+        await updateProduct(i.product_id, temp);
+      }
       await clearCart(userId);
+      dispatch({ type: "reset" });
+      return 'success';
     } catch (error) {
       console.log(error.message);
     }

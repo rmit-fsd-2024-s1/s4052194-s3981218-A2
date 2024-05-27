@@ -1,9 +1,12 @@
-const { gql } = require('apollo-server-express');
-const db = require('../database');
+const { gql } = require("apollo-server-express");
+const { PubSub } = require("graphql-subscriptions");
+const db = require("../database");
+
+const pubsub = new PubSub();
 
 // defining the schema
 
-const schema = buildSchema(`
+const typeDefs = gql(`
   type User {
     user_id: Int!
     username: String!
