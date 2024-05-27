@@ -85,6 +85,93 @@ export async function deleteReview(review_id) {
   return data.deleteReview;
 }
 
+// --- Products -----------------------------------------------------------------------------------
+
+export async function getProducts() {
+  const query = gql`
+    query {
+      products {
+        product_id
+        product_name
+        product_price
+        product_stock
+        product_image
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, query);
+  return data.products;
+}
+
+export async function getProduct(product_id) {
+  const query = gql`
+    query ($product_id: Int!) {
+      product(product_id: $product_id) {
+        product_id
+        product_name
+        product_price
+        product_stock
+        product_image
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, query, { product_id });
+  return data.product;
+}
+
+export async function createProduct(product) {
+  const mutation = gql`
+    mutation ($product_name: String!, $product_price: Float!, $product_image: String!, $product_stock: Int!) {
+      createProduct(product_name: $product_name, product_price: $product_price, product_image: $product_image, product_stock: $product_stock) {
+        product_id
+        product_name
+        product_price
+        product_stock
+        product_image
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, mutation, product);
+  return data.createProduct;
+}
+
+export async function updateProduct(product_id, product) {
+  const mutation = gql`
+    mutation ($product_id: Int!, $product_name: String!, $product_price: Float!, $product_image: String!, $product_stock: Int!) {
+      updateProduct(product_id: $product_id, product_name: $product_name, product_price: $product_price, product_image: $product_image, product_stock: $product_stock) {
+        product_id
+        product_name
+        product_price
+        product_stock
+        product_image
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, mutation, { product_id, ...product });
+  return data.updateProduct;
+}
+
+export async function deleteProduct(product_id) {
+  const mutation = gql`
+    mutation ($product_id: Int!) {
+      deleteProduct(product_id: $product_id) {
+        product_id
+        product_name
+        product_price
+        product_stock
+        product_image
+      }
+    }
+  `;
+
+  const data = await request(GRAPH_QL_URL, mutation, { product_id });
+  return data.deleteProduct;
+}
+
 // --- Owners -------------------------------------------------------------------------------------
 
 export async function createOwner() {

@@ -30,12 +30,17 @@ const typeDefs = gql`
     users: [User!]!
     user(user_id: Int!): User
     reviews: [Review!]!
+    products: [Product!]!
+    product(product_id: Int!): Product
   }
 
   type Mutation {
     blockUser(user_id: Int!): User
     unblockUser(user_id: Int!): User
     deleteReview(review_id: Int!): Review
+    createProduct(product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
+    updateProduct(product_id: Int!, product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
+    deleteProduct(product_id: Int!): Product
   }
 `;
 
@@ -44,6 +49,8 @@ const resolvers = {
     users: async () => await db.user.findAll(),
     user: async (parent, { user_id }) => await db.user.findByPk(user_id),
     reviews: async () => await db.review.findAll({ include: [db.user, db.product] }),
+    products: async () => await db.product.findAll(),
+    product: async (parent, { product_id }) => await db.product.findByPk(product_id),
   },
   Mutation: {
     blockUser: async (parent, { user_id }) => {
@@ -66,7 +73,26 @@ const resolvers = {
       review.comment = '**** This review has been deleted by the admin ****';
       await review.save();
       return review;
-    }
+    },
+    createProduct: async (parent, { product_name, product_price, product_image, product_stock }) => {
+      return await db.product.create({ product_name, product_price, product_image, product_stock });
+    },
+    updateProduct: async (parent, { product_id, product_name, product_price, product_image, product_stock }) => {
+      const product = await db.product.findByPk(product_id);
+      if (!product) throw new Error('Product not found');
+      product.product_name = product_name;
+      product.product_price = product_price;
+      product.product_image = product_image;
+      product.product_stock = product_stock;
+      await product.save();
+      return product;
+    },
+    deleteProduct: async (parent, { product_id }) => {
+      const product = await db.product.findByPk(product_id);
+      if (!product) throw new Error('Product not found');
+      await product.destroy();
+      return product;
+    },
   }
 };
 
