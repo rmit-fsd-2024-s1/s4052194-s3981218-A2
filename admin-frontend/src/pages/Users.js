@@ -40,7 +40,7 @@ const Users = () => {
 
   return (
     <div className="admin-container">
-      <h2>User Block Management</h2>
+      <h2 className="fw-bold">User Block Management</h2>
       <table className="admin-table">
         <thead>
           <tr>

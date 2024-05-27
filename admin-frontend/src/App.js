@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./fragments/Navbar";
 import Footer from "./fragments/Footer";
-import Owners from "./pages/Owners";
-import CreateOwner from "./pages/CreateOwner";
-import EditOwner from "./pages/EditOwner";
 import MessageContext from "./contexts/MessageContext";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
 import Reviews from "./pages/Reviews"; // Import Reviews component
 import Users from "./pages/Users";
-
+import Main from "./pages/Main";
 export default function App() {
   const [message, setMessage] = useState(null);
 
@@ -32,13 +29,12 @@ export default function App() {
           <main role="main">
             <div className="container my-3">
               <Routes>
-                <Route path="/" element={<Owners />} />
+              <Route path="/" element={<Main />} />
+
                 <Route path="/user" element={<Users />} />
                 <Route path="/review" element={<Reviews />} /> {/* Add Reviews route */}
                 <Route path="/product" element={<Products />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/create" element={<CreateOwner />} />
-                <Route path="/edit/:email" element={<EditOwner />} />
               </Routes>
             </div>
           </main>

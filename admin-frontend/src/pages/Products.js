@@ -72,7 +72,7 @@ const Products = () => {
                   <td><input type="number" defaultValue={product.product_stock} onChange={(e) => product.product_stock = parseInt(e.target.value)} /></td>
                   <td>
                     <button onClick={() => handleToggleSpecialProduct(product.product_id, product.is_special)}>
-                      {product.is_special ? 'Unmark Special' : 'Mark Special'}
+                      {product.is_special ? 'Unmark Special': 'Mark Special'}
                     </button>
                   </td>
                   <td>

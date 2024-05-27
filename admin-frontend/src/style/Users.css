@@ -3,14 +3,16 @@
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Courier New', Courier, monospace;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
+    font-size:large;
   }
   
   .admin-container h2 {
     text-align: center;
-    color: #ff6f61;
+    color: rgb(0, 159, 127);
     margin-bottom: 1.5rem;
+    font-weight: 600;
   }
   
   .admin-table {
@@ -26,7 +28,7 @@
   }
   
   .admin-table th {
-    background-color: #ff6f61;
+    background-color: rgb(0, 159, 127);
     color: white;
   }
   
@@ -39,7 +41,7 @@
   }
   
   .admin-table td button {
-    background-color: #ff6f61;
+    background-color: rgb(0, 159, 127);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
