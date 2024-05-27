@@ -1,3 +1,4 @@
+// Review.js
 import React from "react";
 import { useRef, useState, useEffect } from "react";
 import useReview from "../fragments/customHook/useReview";
@@ -158,6 +159,11 @@ const Review = ({ productId, block }) => {
   const handleEdit = (e) => {
     setEdit(e.target.value);
   };
+
+  const isDeleted = (comment) => {
+    return comment === "**** This review has been deleted by the admin ****";
+  };
+
   return (
     <>
       <div className="mt-5">
@@ -167,7 +173,7 @@ const Review = ({ productId, block }) => {
             Write a review
           </button>
         ) : (
-         <p> Bad behavior. You are blocked. You can't write a review. </p>
+          <p> Bad behavior. You are blocked. You can't write a review. </p>
         )}
       </div>
       {showInput && (
@@ -228,7 +234,7 @@ const Review = ({ productId, block }) => {
                       ))}
                   </div>
                   <p class="card-text d-inline"> {review.comment}</p>
-                  {userId && !block && (
+                  {userId && !block && !isDeleted(review.comment) && (
                     <div className="d-inline float-end">
                       {" "}
                       <span
@@ -270,7 +276,7 @@ const Review = ({ productId, block }) => {
                     </div>
                   )}
 
-                  {userId && review.user_id === userId ? (
+                  {userId && review.user_id === userId && !isDeleted(review.comment) ? (
                     <div className="d-inline float-end">
                       {" "}
                       <span
@@ -342,7 +348,7 @@ const Review = ({ productId, block }) => {
                               {r.user.username}
                             </h5>
                             <p class="card-text"> {r.comment}</p>
-                            {userId && r.user_id === userId ? (
+                            {userId && r.user_id === userId && !isDeleted(r.comment) ? (
                               <div className="d-inline float-end">
                                 {" "}
                                 <span
