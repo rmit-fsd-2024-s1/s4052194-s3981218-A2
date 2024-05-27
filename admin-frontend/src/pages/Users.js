@@ -39,7 +39,7 @@ const Users = () => {
   };
 
   return (
-    <div>
+    <div className="admin-container">
       <h2>User Block Management</h2>
       <table className="admin-table">
         <thead>
