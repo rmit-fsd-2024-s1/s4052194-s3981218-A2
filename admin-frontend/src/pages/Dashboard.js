@@ -5,18 +5,13 @@ import { useState, useEffect } from "react";
 import { getAllReviews } from "../data/repository";
 
 const Dashboard = () => {
-  const [reviews, setReviews] = useState([]);
   const [showLatestReviews, setShowLatestReviews] = useState([]);
+  const [latest,setLatest] = useState([]);
   useEffect(() => {
     //initial stage so the admin can see the reviews after refreshing the page
     const fetchReviews = async () => {
       const getReviews = await getAllReviews();
-      setReviews(getReviews);
-      if (getReviews.length >= 3) {
-        setShowLatestReviews(getReviews.slice(getReviews.length - 3));
-      } else {
-        setShowLatestReviews(getReviews);
-      }
+      setShowLatestReviews(getReviews);
     };
     fetchReviews();
   }, []);
@@ -45,19 +40,17 @@ const Dashboard = () => {
             if (reviewExists) {
               return prevReviews;
             }
-            //update the new reviews
-            if (prevReviews.length === 3) {
-              const newReviews = prevReviews.slice(1);
-              return [...newReviews, newReview];
-            }
             return [...prevReviews, newReview];
           });
         },
       });
   }, []);
-  console.log('all',reviews);
+   useEffect(() => {
+    const temp = showLatestReviews.slice(showLatestReviews.length - 3);
+    setLatest(temp);
+   }, [showLatestReviews]);
   return (
-    <div>
+    <div className="d-flex">
       <div className="admin-container">
         <h2>3 Recent Reviews</h2>
         <table className="admin-table">
@@ -71,7 +64,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {showLatestReviews.map((e) => {
+            {latest.map((e) => {
               return (
                 <tr key={e.review_id}>
                   <td>{e.review_id}</td>
@@ -85,6 +78,7 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+      <div className="">x</div>
     </div>
   );
 };
