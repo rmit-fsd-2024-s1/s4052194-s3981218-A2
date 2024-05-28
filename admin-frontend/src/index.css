@@ -14,3 +14,6 @@ code {
   color:rgb(0, 159, 127);
   font-weight: 600;
 }
+.nav-item a:hover, .nav-item a:focus {
+  color:black;
+}

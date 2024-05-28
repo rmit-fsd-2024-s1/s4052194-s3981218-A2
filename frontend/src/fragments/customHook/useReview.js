@@ -5,6 +5,7 @@ import {
   addReview,
   deleteReview,
   editReview,
+  addReply
 } from "../../services/reviewService";
 import { reviewReducer } from "../reducer/reviewReducer";
 const initialState = {
@@ -102,11 +103,27 @@ const useReview = () => {
     }
     //if added successfully
   };
+  const createReply = async (review) =>{
+    try {
+      //call api
+      let newReview = await addReply(review);
+      dispatch({
+        type: "addReview",
+        payload: {
+          reviews: newReview,
+        },
+      });
+      setNewReview(newReview);
+    } catch (error) {
+      console.error("Error creating review:", error);
+    }
+  }
   return {
     state,
     loadingReview,
     getReviewByProductId,
     createReview,
+    createReply,
     removeReview,
     updateReview
   };

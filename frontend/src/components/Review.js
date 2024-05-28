@@ -21,6 +21,7 @@ const Review = ({ productId, block }) => {
     getReviewByProductId,
     loadingReview,
     createReview,
+    createReply,
     removeReview,
     updateReview,
   } = useReview();
@@ -92,18 +93,23 @@ const Review = ({ productId, block }) => {
       review.score = null;
       review.comment = replyText;
       review.parent_id = parentId;
+      apiSubmitReview('reply',review);
     } else {
       setWarning(false);
       review.score = rating;
       review.comment = comment;
+      apiSubmitReview('review',review);
     }
-    apiSubmitReview(review);
   };
 
   //creating a review
-  const apiSubmitReview = (review) => {
+  const apiSubmitReview = (status,review) => {
     try {
-      createReview(review);
+      if (status === 'review') {
+        createReview(review);
+      } else if (status === 'reply') {
+        createReply(review);
+      }
       setComment("");
       setReplyText("");
       setSuccess(true);

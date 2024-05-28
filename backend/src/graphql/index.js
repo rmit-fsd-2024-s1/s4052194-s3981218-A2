@@ -28,8 +28,9 @@ const typeDefs = gql(`
   type Review {
     review_id: Int!
     comment: String!
-    product: Product!
-    user: User!
+    product_id: Int!
+    score:Int
+    user_id: Int!
   }
 
   type Query {
@@ -44,6 +45,7 @@ const typeDefs = gql(`
     blockUser(user_id: Int!): User
     unblockUser(user_id: Int!): User
     deleteReview(review_id: Int!): Review
+    createReview(user_id:Int!,product_id:Int!,score:Int,comment:String!):Review
     createProduct(product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
     updateProduct(product_id: Int!, product_name: String!, product_price: Float!, product_image: String!, product_stock: Int!): Product
     deleteProduct(product_id: Int!): Product
@@ -56,55 +58,77 @@ const resolvers = {
   Query: {
     users: async () => await db.user.findAll(),
     user: async (parent, { user_id }) => await db.user.findByPk(user_id),
-    reviews: async () => await db.review.findAll({ include: [db.user, db.product] }),
+    reviews: async () =>
+      await db.review.findAll({ include: [db.user, db.product] }),
     products: async () => {
       const products = await db.product.findAll();
       const specialProducts = await db.special_product.findAll();
-      const specialProductIds = specialProducts.map(sp => sp.product_id);
+      const specialProductIds = specialProducts.map((sp) => sp.product_id);
 
-      return products.map(product => ({
+      return products.map((product) => ({
         ...product.toJSON(),
-        is_special: specialProductIds.includes(product.product_id)
+        is_special: specialProductIds.includes(product.product_id),
       }));
     },
     product: async (parent, { product_id }) => {
       const product = await db.product.findByPk(product_id);
       if (!product) return null;
-      const specialProduct = await db.special_product.findOne({ where: { product_id } });
+      const specialProduct = await db.special_product.findOne({
+        where: { product_id },
+      });
       return {
         ...product.toJSON(),
-        is_special: !!specialProduct
+        is_special: !!specialProduct,
       };
-    }
+    },
   },
   Mutation: {
     blockUser: async (parent, { user_id }) => {
       const user = await db.user.findByPk(user_id);
-      if (!user) throw new Error('User not found');
+      if (!user) throw new Error("User not found");
       user.blocked_status = true;
       await user.save();
       return user;
     },
     unblockUser: async (parent, { user_id }) => {
       const user = await db.user.findByPk(user_id);
-      if (!user) throw new Error('User not found');
+      if (!user) throw new Error("User not found");
       user.blocked_status = false;
       await user.save();
       return user;
     },
+    createReview: async (parent, { user_id, product_id, score, comment }) => {
+      return await db.review.create({
+        user_id: user_id,
+        product_id: product_id,
+        score: score,
+        comment: comment,
+      });
+    },
     deleteReview: async (parent, { review_id }) => {
       const review = await db.review.findByPk(review_id);
-      if (!review) throw new Error('Review not found');
-      review.comment = '**** This review has been deleted by the admin ****';
+      if (!review) throw new Error("Review not found");
+      review.comment = "**** This review has been deleted by the admin ****";
       await review.save();
       return review;
     },
-    createProduct: async (parent, { product_name, product_price, product_image, product_stock }) => {
-      return await db.product.create({ product_name, product_price, product_image, product_stock });
+    createProduct: async (
+      parent,
+      { product_name, product_price, product_image, product_stock }
+    ) => {
+      return await db.product.create({
+        product_name,
+        product_price,
+        product_image,
+        product_stock,
+      });
     },
-    updateProduct: async (parent, { product_id, product_name, product_price, product_image, product_stock }) => {
+    updateProduct: async (
+      parent,
+      { product_id, product_name, product_price, product_image, product_stock }
+    ) => {
       const product = await db.product.findByPk(product_id);
-      if (!product) throw new Error('Product not found');
+      if (!product) throw new Error("Product not found");
       product.product_name = product_name;
       product.product_price = product_price;
       product.product_image = product_image;
@@ -114,7 +138,7 @@ const resolvers = {
     },
     deleteProduct: async (parent, { product_id }) => {
       const product = await db.product.findByPk(product_id);
-      if (!product) throw new Error('Product not found');
+      if (!product) throw new Error("Product not found");
       await product.destroy();
       return product;
     },
@@ -123,20 +147,22 @@ const resolvers = {
       const product = await db.product.findByPk(product_id);
       return {
         ...product.toJSON(),
-        is_special: true
+        is_special: true,
       };
     },
     unmarkSpecialProduct: async (parent, { product_id }) => {
-      const specialProduct = await db.special_product.findOne({ where: { product_id } });
-      if (!specialProduct) throw new Error('Special Product not found');
+      const specialProduct = await db.special_product.findOne({
+        where: { product_id },
+      });
+      if (!specialProduct) throw new Error("Special Product not found");
       await specialProduct.destroy();
       const product = await db.product.findByPk(product_id);
       return {
         ...product.toJSON(),
-        is_special: false
+        is_special: false,
       };
-    }
-  }
+    },
+  },
 };
 
 module.exports = { typeDefs, resolvers };
