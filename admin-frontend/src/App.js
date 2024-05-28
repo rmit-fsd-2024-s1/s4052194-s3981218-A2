@@ -29,10 +29,10 @@ export default function App() {
           <main role="main">
             <div className="container my-3">
               <Routes>
-              <Route path="/" element={<Main />} />
-
+                <Route path="/" element={<Main />} />
                 <Route path="/user" element={<Users />} />
-                <Route path="/review" element={<Reviews />} /> {/* Add Reviews route */}
+                <Route path="/review" element={<Reviews />} />{" "}
+                {/* Add Reviews route */}
                 <Route path="/product" element={<Products />} />
                 <Route path="/dashboard" element={<Dashboard />} />
               </Routes>

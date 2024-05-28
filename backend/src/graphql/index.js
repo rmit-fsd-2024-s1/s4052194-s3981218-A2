@@ -4,6 +4,9 @@ const db = require("../database");
 
 const pubsub = new PubSub();
 
+//new review tracking
+const REVIEW_ADDED_TRIGGER = "REVIEW_ADDED";
+
 // defining the schema
 
 const typeDefs = gql(`
@@ -52,6 +55,9 @@ const typeDefs = gql(`
     markSpecialProduct(product_id: Int!): Product
     unmarkSpecialProduct(product_id: Int!): Product
   }
+  type Subscription {
+    review_added:Review!
+  }
 `);
 
 const resolvers = {
@@ -98,12 +104,15 @@ const resolvers = {
       return user;
     },
     createReview: async (parent, { user_id, product_id, score, comment }) => {
-      return await db.review.create({
+      const review = await db.review.create({
         user_id: user_id,
         product_id: product_id,
         score: score,
         comment: comment,
       });
+      pubsub.publish(REVIEW_ADDED_TRIGGER, { review_added: review });
+
+      return review;
     },
     deleteReview: async (parent, { review_id }) => {
       const review = await db.review.findByPk(review_id);
@@ -161,6 +170,11 @@ const resolvers = {
         ...product.toJSON(),
         is_special: false,
       };
+    },
+  },
+  Subscription: {
+    review_added: {
+      subscribe: () => pubsub.asyncIterator(REVIEW_ADDED_TRIGGER),
     },
   },
 };
