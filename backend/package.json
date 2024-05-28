@@ -16,7 +16,7 @@
     "mysql2": "^2.3.0",
     "nodemon": "^2.0.12",
     "sequelize": "^6.37.3",
-    "ws": "^8.8.1"
+    "ws": "^8.17.0"
   },
   "scripts": {
     "start": "nodemon server.js",
