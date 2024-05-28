@@ -34,6 +34,8 @@ const typeDefs = gql(`
     product_id: Int!
     score:Int
     user_id: Int!
+    user:User
+    product:Product
   }
 
   type Query {
