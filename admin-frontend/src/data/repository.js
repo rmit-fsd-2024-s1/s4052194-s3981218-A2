@@ -1,4 +1,4 @@
-import { request, gql } from 'graphql-request';
+import { request, gql } from "graphql-request";
 
 // --- Constants ----------------------------------------------------------------------------------
 const GRAPH_QL_URL = "http://localhost:4000/graphql";
@@ -85,6 +85,24 @@ export async function deleteReview(review_id) {
   return data.deleteReview;
 }
 
+export async function getAllReviews() {
+  const query = gql`
+    query {
+      reviews {
+        review_id
+        comment
+        score
+        user_id
+        product {
+          product_id
+          product_name
+        }
+      }
+    }
+  `;
+  const data = await request(GRAPH_QL_URL, query);
+  return data.reviews;
+}
 // --- Products -----------------------------------------------------------------------------------
 
 export async function getProducts() {
@@ -125,8 +143,18 @@ export async function getProduct(product_id) {
 
 export async function createProduct(product) {
   const mutation = gql`
-    mutation ($product_name: String!, $product_price: Float!, $product_image: String!, $product_stock: Int!) {
-      createProduct(product_name: $product_name, product_price: $product_price, product_image: $product_image, product_stock: $product_stock) {
+    mutation (
+      $product_name: String!
+      $product_price: Float!
+      $product_image: String!
+      $product_stock: Int!
+    ) {
+      createProduct(
+        product_name: $product_name
+        product_price: $product_price
+        product_image: $product_image
+        product_stock: $product_stock
+      ) {
         product_id
         product_name
         product_price
@@ -142,8 +170,20 @@ export async function createProduct(product) {
 
 export async function updateProduct(product_id, product) {
   const mutation = gql`
-    mutation ($product_id: Int!, $product_name: String!, $product_price: Float!, $product_image: String!, $product_stock: Int!) {
-      updateProduct(product_id: $product_id, product_name: $product_name, product_price: $product_price, product_image: $product_image, product_stock: $product_stock) {
+    mutation (
+      $product_id: Int!
+      $product_name: String!
+      $product_price: Float!
+      $product_image: String!
+      $product_stock: Int!
+    ) {
+      updateProduct(
+        product_id: $product_id
+        product_name: $product_name
+        product_price: $product_price
+        product_image: $product_image
+        product_stock: $product_stock
+      ) {
         product_id
         product_name
         product_price
@@ -154,7 +194,10 @@ export async function updateProduct(product_id, product) {
     }
   `;
 
-  const data = await request(GRAPH_QL_URL, mutation, { product_id, ...product });
+  const data = await request(GRAPH_QL_URL, mutation, {
+    product_id,
+    ...product,
+  });
   return data.updateProduct;
 }
 

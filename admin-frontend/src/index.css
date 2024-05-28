@@ -11,9 +11,19 @@ code {
 
 .nav-item a{
   
-  color:rgb(0, 159, 127);
+  color:rgb(0, 0, 0);
   font-weight: 600;
+  font-size: 25px;
 }
 .nav-item a:hover, .nav-item a:focus {
-  color:black;
+  color:rgb(0, 159, 127);
+  
+}
+.footer {
+  background-color:  rgb(0, 159, 127);
+  
+}
+.admin {
+  color:rgb(0, 159, 127);
+  font-weight: 600;
 }

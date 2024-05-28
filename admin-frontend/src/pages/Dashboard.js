@@ -2,9 +2,24 @@ import React from "react";
 import client from "../services/client";
 import gql from "graphql-tag";
 import { useState, useEffect } from "react";
-const Dashboard = () => {
-  const [showLatestReviews, setShowLatestReviews] = useState([]);
+import { getAllReviews } from "../data/repository";
 
+const Dashboard = () => {
+  const [reviews, setReviews] = useState([]);
+  const [showLatestReviews, setShowLatestReviews] = useState([]);
+  useEffect(() => {
+    //initial stage so the admin can see the reviews after refreshing the page
+    const fetchReviews = async () => {
+      const getReviews = await getAllReviews();
+      setReviews(getReviews);
+      if (getReviews.length >= 3) {
+        setShowLatestReviews(getReviews.slice(getReviews.length - 3));
+      } else {
+        setShowLatestReviews(getReviews);
+      }
+    };
+    fetchReviews();
+  }, []);
   useEffect(() => {
     const subscription = client
       .subscribe({
@@ -30,6 +45,7 @@ const Dashboard = () => {
             if (reviewExists) {
               return prevReviews;
             }
+            //update the new reviews
             if (prevReviews.length === 3) {
               const newReviews = prevReviews.slice(1);
               return [...newReviews, newReview];
@@ -39,8 +55,7 @@ const Dashboard = () => {
         },
       });
   }, []);
-  console.log("latest", showLatestReviews);
-
+  console.log('all',reviews);
   return (
     <div>
       <div className="admin-container">
