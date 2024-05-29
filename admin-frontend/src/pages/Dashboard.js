@@ -64,6 +64,7 @@ const Dashboard = () => {
     setBarLabels(sortReviews.map((e) => e[0]));
     setBardata(sortReviews.map((e) => e[1].avg));
   }, [sortReviews]);
+  console.log(showLatestReviews)
   return (
     <div className="d-flex">
       <div className="admin-container">
