@@ -1,5 +1,6 @@
 const db = require("../database");
 const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator');
 
 // Get all users
 exports.getAll = (req, res) => {
@@ -43,7 +44,7 @@ exports.getUserById = (req, res) => {
 };
 
 // Create a new user
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   const { username, email, password, is_admin } = req.body;
 
   if (!username || !email || !password) {
@@ -52,150 +53,104 @@ exports.create = (req, res) => {
     });
   }
 
-  db.user.findOne({ where: { username } }).then(user => {
-    if (user) {
-      return res.status(400).send({
-        message: "This username is already used.",
-      });
+  try {
+    const existingUsername = await db.user.findOne({ where: { username } });
+    if (existingUsername) {
+      return res.status(400).send({ message: "This username is already used." });
     }
-    
-    db.user.findOne({ where: { email } }).then(user => {
-      if (user) {
-        return res.status(400).send({
-          message: "This email address is already used.",
-        });
-      }
-      
-      const date_joined = new Date();
-      const password_hash = bcrypt.hashSync(password, 10);
 
-      db.user
-        .create({
-          username,
-          email,
-          password_hash,
-          date_joined,
-          is_admin: is_admin || false,
-        })
-        .then((data) => {
-          res.send(data);
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: err.message || "Some error occurred while creating user.",
-          });
-        });
+    const existingEmail = await db.user.findOne({ where: { email } });
+    if (existingEmail) {
+      return res.status(400).send({ message: "This email address is already used." });
+    }
+
+    const date_joined = new Date();
+    const password_hash = bcrypt.hashSync(password, 10);
+
+    const newUser = await db.user.create({
+      username,
+      email,
+      password_hash,
+      date_joined,
+      is_admin: is_admin || false,
     });
-  });
+
+    res.send(newUser);
+  } catch (err) {
+    res.status(500).send({ message: err.message || "Some error occurred while creating user." });
+  }
 };
 
 // Update user by ID
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const { user_id } = req.params;
   const { username, email, password, is_admin } = req.body;
 
   if (!user_id) {
-    return res.status(400).send({
-      message: "user_id cannot be empty!",
-    });
+    return res.status(400).send({ message: "user_id cannot be empty!" });
   }
 
   const password_hash = password ? bcrypt.hashSync(password, 10) : undefined;
 
-  // Check for existing username and email before updating
-  db.user.findOne({ where: { username } }).then(existingUser => {
-    if (existingUser && existingUser.user_id !== parseInt(user_id)) {
-      return res.status(400).send({
-        message: "Username is already taken.",
-      });
+  try {
+    const existingUsername = await db.user.findOne({ where: { username } });
+    if (existingUsername && existingUsername.user_id !== parseInt(user_id)) {
+      return res.status(400).send({ message: "Username is already taken." });
     }
 
-    db.user.findOne({ where: { email } }).then(existingUser => {
-      if (existingUser && existingUser.user_id !== parseInt(user_id)) {
-        return res.status(400).send({
-          message: "Email is already registered.",
-        });
-      }
+    const existingEmail = await db.user.findOne({ where: { email } });
+    if (existingEmail && existingEmail.user_id !== parseInt(user_id)) {
+      return res.status(400).send({ message: "Email is already registered." });
+    }
 
-      db.user
-        .update(
-          {
-            username,
-            email,
-            password_hash,
-            is_admin,
-          },
-          {
-            where: { user_id },
-          }
-        )
-        .then((num) => {
-          if (num == 1) {
-            res.send({
-              message: "User was updated successfully.",
-            });
-          } else {
-            res.send({
-              message: `Cannot update User with id=${user_id}. Maybe User was not found or req.body is empty!`,
-            });
-          }
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: err.message || "Error updating User with id=" + user_id,
-          });
-        });
-    });
-  });
+    const [updated] = await db.user.update(
+      { username, email, password_hash, is_admin },
+      { where: { user_id } }
+    );
+
+    if (updated) {
+      const updatedUser = await db.user.findByPk(user_id);
+      res.send(updatedUser);
+    } else {
+      res.status(404).send({ message: `User with id=${user_id} not found.` });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message || "Error updating User with id=" + user_id });
+  }
 };
 
 // Delete user by ID
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const { user_id } = req.params;
 
   if (!user_id) {
-    return res.status(400).send({
-      message: "user_id cannot be empty!",
-    });
+    return res.status(400).send({ message: "user_id cannot be empty!" });
   }
 
-  db.user
-    .destroy({
-      where: { user_id },
-    })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete User with id=${user_id}. Maybe User was not found!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Could not delete User with id=" + user_id,
-      });
-    });
+  try {
+    const deleted = await db.user.destroy({ where: { user_id } });
+    if (deleted) {
+      res.send({ message: "User was deleted successfully!" });
+    } else {
+      res.status(404).send({ message: `User with id=${user_id} not found.` });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message || "Could not delete User with id=" + user_id });
+  }
 };
 
 // Check if username exists
-exports.checkUsername = (req, res) => {
-  const username = req.params.username;
-  db.user
-    .findOne({ where: { username } })
-    .then((user) => {
-      if (user) {
-        res.send({ exists: true, user_id: user.user_id });
-      } else {
-        res.send({ exists: false });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while checking username.",
-      });
-    });
+exports.checkUsername = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const user = await db.user.findOne({ where: { username } });
+    if (user) {
+      res.send({ exists: true, user_id: user.user_id });
+    } else {
+      res.send({ exists: false });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message || "Some error occurred while checking username." });
+  }
 };
