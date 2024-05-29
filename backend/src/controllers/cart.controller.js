@@ -108,7 +108,6 @@ exports.deleteByUser = (req, res) => {
 //delete by user id && item id
 exports.deleteOneCart = (req,res) => {
   const {product_id,user_id} = req.body;
-  console.log(product_id, " ", user_id)
   db.cart.destroy({
     where: {
       user_id: req.body.user_id,

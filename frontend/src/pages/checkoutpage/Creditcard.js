@@ -16,7 +16,7 @@ const Creditcard = ({ inputClassName, input, handleChange, onSubmit }) => {
               placeholder="e.g. BATMAN"
               value={input.name}
               onChange={handleChange}
-              autocomplete="cc-csc"
+              autoComplete="cc-csc"
               required
             />
           </div>
@@ -31,7 +31,7 @@ const Creditcard = ({ inputClassName, input, handleChange, onSubmit }) => {
               placeholder="e.g. 1643 3211 2315 9191"
               value={input.credit}
               onChange={handleChange}
-              autocomplete="cc-csc"
+              autoComplete="cc-csc"
               required
             />
           </div>

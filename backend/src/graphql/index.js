@@ -112,11 +112,9 @@ const resolvers = {
         score: score,
         comment: comment,
       });
-      console.log('review',review.dataValues.review_id)
       const product = await db.product.findByPk(product_id, {
         attributes: ['product_id', 'product_name']
       });
-      console.log('findproduct',product)
 
       const reviewWithProduct = {
         review_id: review.dataValues.review_id,
@@ -128,7 +126,6 @@ const resolvers = {
           product_name: product.dataValues.product_name,
         }
       };
-      console.log(reviewWithProduct)
       pubsub.publish(REVIEW_ADDED_TRIGGER, { review_added: reviewWithProduct });
       return review;
     },

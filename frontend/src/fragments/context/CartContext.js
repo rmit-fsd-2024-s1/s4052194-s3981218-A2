@@ -124,7 +124,6 @@ export const CartProvider = ({ children, userId }) => {
       for (let i of state.products) {
         let temp = await getProductById(i.product_id);
         temp.product_stock -= i.quantity;
-        console.log(temp);
         await updateProduct(i.product_id, temp);
       }
       await clearCart(userId);

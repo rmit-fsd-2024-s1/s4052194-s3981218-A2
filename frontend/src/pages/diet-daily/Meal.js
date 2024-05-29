@@ -10,9 +10,7 @@ function Meal({ meal }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        setImageUrl(data.image);
-        console.log(imgUrl);
-      })
+        setImageUrl(data.image);      })
       .catch(() => {
         console.log("error");
       });

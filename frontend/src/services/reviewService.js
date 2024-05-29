@@ -40,7 +40,6 @@ export async function addReview(review) {
     }
   `;
   const data = await request(GRAPH_QL_URL, mutation, review);
-  console.log('add review',data.createReview)
   return data.createReview;
 }
 
@@ -55,7 +54,6 @@ export async function deleteReview(id) {
 }
 
 export async function editReview(id, comment) {
-  console.log("id", id);
   const review = {
     review_id: id,
     comment: comment,

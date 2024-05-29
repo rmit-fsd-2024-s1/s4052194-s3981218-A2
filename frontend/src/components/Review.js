@@ -184,7 +184,7 @@ const Review = ({ productId, block }) => {
       </div>
       {showInput && (
         <>
-          <div class="d-flex mt-3">
+          <div className="d-flex mt-3">
             {stars.map((star, i) => (
               <Star
                 key={i}
@@ -211,13 +211,13 @@ const Review = ({ productId, block }) => {
         return (
           <div key={review.review_id}>
             {review.parent_id === null ? (
-              <div class="card p-3">
-                <div class="card-header bg-white">
+              <div className="card p-3">
+                <div className="card-header bg-white">
                   <CommentStar rating={review.score} key={review.review_id} />
                 </div>
-                <div class="card-body">
+                <div className="card-body">
                   <div className="d-flex my-2 justify-content-between">
-                    <h5 class="card-title fw-bold"> {review.user.username}</h5>
+                    <h5 className="card-title fw-bold"> {review.user.username}</h5>
                     {/* follow user part */}
                     {userId &&
                       userId !== review.user_id &&
@@ -239,7 +239,7 @@ const Review = ({ productId, block }) => {
                         </p>
                       ))}
                   </div>
-                  <p class="card-text d-inline"> {review.comment}</p>
+                  <p className="card-text d-inline"> {review.comment}</p>
                   {userId && !block && !isDeleted(review.comment) && (
                     <div className="d-inline float-end">
                       {" "}
@@ -348,14 +348,14 @@ const Review = ({ productId, block }) => {
                   if (r.parent_id === review.review_id) {
                     if (r.user && r.user.username !== undefined) {
                       return (
-                        <div class="ms-5">
-                          <div class="card-header bg-white"></div>
-                          <div class="card-body">
-                            <h5 class="card-title fw-bold">
+                        <div className="ms-5">
+                          <div className="card-header bg-white"></div>
+                          <div className="card-body">
+                            <h5 className="card-title fw-bold">
                               {" "}
                               {r.user.username}
                             </h5>
-                            <p class="card-text"> {r.comment}</p>
+                            <p className="card-text"> {r.comment}</p>
                             {userId &&
                             r.user_id === userId &&
                             !isDeleted(r.comment) ? (

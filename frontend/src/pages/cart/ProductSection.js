@@ -34,9 +34,9 @@ const ProductSection = () => {
                           {item.product.product_price}
                         </td>
                         <td className="fw-normal font-monospace">
-                          <div class="input-group mb-3 w-75">
+                          <div className="input-group mb-3 w-75">
                             <span
-                              class="input-group-text"
+                              className="input-group-text"
                               onClick={() =>
                                 item.quantity !== 1
                                   ? updateQuantity(item, "minus")
@@ -47,12 +47,13 @@ const ProductSection = () => {
                             </span>
                             <input
                               type="text"
-                              class="form-control text-center"
+                              className="form-control text-center"
                               key={item.product.product_id}
                               value={item.quantity}
+                              onChange={()=>{}}
                             />
                             <span
-                              class="input-group-text"
+                              className="input-group-text"
                               onClick={() => updateQuantity(item, "plus")}
                             >
                               +

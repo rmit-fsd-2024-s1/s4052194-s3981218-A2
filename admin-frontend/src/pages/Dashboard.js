@@ -43,7 +43,6 @@ const Dashboard = () => {
       })
       .subscribe({
         next: (payload) => {
-          console.log("new payload", payload.data);
           const newReview = payload.data.review_added;
           setShowLatestReviews((prevReviews) => {
             const reviewExists = prevReviews.some(

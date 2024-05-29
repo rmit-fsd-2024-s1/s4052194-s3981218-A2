@@ -34,7 +34,6 @@ const useReview = () => {
     };
     fetchInitData();
     //fetch api reviews
-    console.log("fetch1");
   }, [newReview]);
   const getReviewByProductId = (id) => {
     const reviews = state.reviews.filter((r) => {

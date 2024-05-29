@@ -6,9 +6,9 @@ const ProductList = ({ list }) => {
   return (
     <div className="container">
       <div className="row">
-        {products.map((item) => { 
+        {products.map((item,index) => { 
           return (
-            <div className="col" key={item.id}>
+            <div className="col" key={index}>
               <Product
                 product_name={item.product_name}
                 product_price={item.product_price}

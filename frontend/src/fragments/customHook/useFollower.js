@@ -24,7 +24,6 @@ const useFollower = () => {
       } catch (err) {
         console.log(err);
       }
-      console.log("run");
     };
     fetchInitData();
   }, []);

@@ -40,7 +40,6 @@ exports.create = async (req,res) => {
     })
     .then((data) => {
         order_item_id = data.dataValues.order_item_id;
-        console.log(order_item_id)
     })  
     .catch((err) => {
       res.status(500).send({
@@ -69,7 +68,6 @@ exports.deleteItemByUserId = (req,res) => {
     user_id:req.body.user_id
   } }
   ).then((data) => {
-    console.log(data)
     if (data === 0) {
       res.status(400).send({message:"user id not found in the order table"})
     } else {

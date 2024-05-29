@@ -52,10 +52,9 @@ const Productpage = ({ username }) => {
     product_stock,
     product_price,
   } = product[0];
-
+//find special products
   const getSpecialId = specialProducts.map((e) => e.product_id);
   const isSpecial = getSpecialId.includes(product_id);
-  console.log(userId,"is ",block);
   return (
     <div>
       <nav aria-label="breadcrumb" className="ms-5 mt-5">

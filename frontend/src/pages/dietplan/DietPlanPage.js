@@ -74,7 +74,6 @@ const DietPlanPage = () => {
         `https://api.spoonacular.com/mealplanner/generate?apiKey=6a6056f6a75545e08e94e56bcb5754b9&timeFrame=day&targetCalories=${calories}`
       );
       const data = await response.json();
-      //console.log(data);
       navigate('/dailymealplan', { state: { mealData: data } }); // Passing data via state
     } catch (error) {
       console.error('Error fetching meal data:', error);
@@ -90,7 +89,6 @@ const DietPlanPage = () => {
     try {
       const response = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=6a6056f6a75545e08e94e56bcb5754b9&timeFrame=week&targetCalories=${calories}`);
       const data = await response.json();
-      //console.log(data.week);
       navigate('/weeklymealplan',{state: {mealData: data.week}})
     } catch (error) {
       console.error('Error fetching meal data:', error);

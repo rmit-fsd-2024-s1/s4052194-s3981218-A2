@@ -44,7 +44,6 @@ exports.create = async (req, res) => {
 //delete review by id
 exports.delete = (req, res) => {
   const { review_id } = req.body;
-  console.log("this is request", review_id);
 
   try {
     db.review.destroy({
@@ -70,7 +69,6 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
   //user id, review id, comment or score
   const { review_id, comment } = req.body;
-  console.log(review_id)
   db.review
     .update(
       { comment: comment },
@@ -81,7 +79,6 @@ exports.update = (req, res) => {
       }
     )
     .then((data) => {
-      console.log(data);
       if (data[0] === 0) {
         res.status(400).send({ message: "The review is not found" });
       } else {

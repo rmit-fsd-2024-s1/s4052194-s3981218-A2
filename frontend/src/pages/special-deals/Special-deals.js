@@ -14,7 +14,6 @@ const SpecialDeals = () => {
     return <div>Loading...</div>;
   }
   const getSpecialId = specialProducts.map((e) => e.product_id);
-  console.log(getSpecialId)
   const special = products.filter((product) => {
     if (getSpecialId.includes(product.product_id)) {
       return product;

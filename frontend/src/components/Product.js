@@ -24,7 +24,11 @@ const Product = (props) => {
   const isSpecial = getSpecialId.includes(props.product_id);
   return (
     <>
-{isSpecial ? <div className="special-badge bg-warning">special product </div>:''}
+      {isSpecial ? (
+        <div className="special-badge bg-warning">special product </div>
+      ) : (
+        ""
+      )}
       <div className="item text-center font-monospace mb-4">
         <Link className={"menu-style"} to={`/product-page/${props.product_id}`}>
           <img src={props.product_image} alt="" />
@@ -37,7 +41,6 @@ const Product = (props) => {
             <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
           </button>
         ) : !isDisabled ? (
-          
           <button
             className="addCart"
             onClick={() =>
@@ -57,27 +60,6 @@ const Product = (props) => {
             <i className="fi fi-rr-shopping-cart-add"></i> Added To Cart
           </button>
         )}
-
-        {/* {props.stock > 0 || !isDisabled ? (
-        <button
-          type="button"
-          onClick={() =>
-            addToCart({
-              user_id: 2,
-              product_id: props.productId,
-              quantity: 1,
-            })
-          }
-          className={"addCart"}
-          
-        >
-          <i className="fi fi-rr-shopping-cart-add"></i> Add To Cart
-        </button>
-      ) : (
-        <button type="button" className="addCart disabled" disabled>
-          <i className="fi fi-rr-shopping-cart-add"></i> Out of stock
-        </button>
-      )} */}
       </div>
     </>
   );

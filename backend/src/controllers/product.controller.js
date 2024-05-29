@@ -70,7 +70,6 @@ exports.createProduct = (req, res) => {
 
 // Update product by ID
 exports.updateProduct = (req, res) => {
-  console.log('backend',res.body)
   const { product_id } = req.params;
   const { product_name, product_price, product_image, product_stock } = req.body;
 
