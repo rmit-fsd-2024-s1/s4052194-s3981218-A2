@@ -21,6 +21,7 @@ const CartContext = createContext();
 const initialState = {
   products: [],
 };
+//provide cart state
 export const CartProvider = ({ children, userId }) => {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(cartReducer, initialState);

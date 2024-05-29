@@ -112,8 +112,24 @@ const resolvers = {
         score: score,
         comment: comment,
       });
-      pubsub.publish(REVIEW_ADDED_TRIGGER, { review_added: review });
+      console.log('review',review.dataValues.review_id)
+      const product = await db.product.findByPk(product_id, {
+        attributes: ['product_id', 'product_name']
+      });
+      console.log('findproduct',product)
 
+      const reviewWithProduct = {
+        review_id: review.dataValues.review_id,
+        comment: review.dataValues.comment,
+        score: review.dataValues.score,
+        user_id: review.dataValues.user_id,
+        product: {
+          product_id: product.dataValues.product_id,
+          product_name: product.dataValues.product_name,
+        }
+      };
+      console.log(reviewWithProduct)
+      pubsub.publish(REVIEW_ADDED_TRIGGER, { review_added: reviewWithProduct });
       return review;
     },
     deleteReview: async (parent, { review_id }) => {
