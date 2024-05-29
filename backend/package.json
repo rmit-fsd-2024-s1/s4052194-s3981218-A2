@@ -10,13 +10,15 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-graphql": "^0.12.0",
+    "express-validator": "^7.1.0",
     "graphql": "^15.8.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-ws": "^5.16.0",
     "mysql2": "^2.3.0",
     "nodemon": "^2.0.12",
     "sequelize": "^6.37.3",
-    "ws": "^8.17.0"
+    "ws": "^8.17.0",
+    "xss-clean": "^0.1.4"
   },
   "scripts": {
     "start": "nodemon server.js",

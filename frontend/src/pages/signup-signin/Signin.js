@@ -38,7 +38,7 @@ function SignIn(props) {
       }
     } catch (error) {
       console.error("Error signing in:", error);
-      setErrorMessage(error.response?.data?.message || "Invalid email or password"); // Set the error message from the response
+      setErrorMessage(error.response?.data?.errors.map(err => err.msg).join(' ') || "Invalid email or password"); // Set the error message from the response
       setIsSignedIn(false); // Set sign-in status to false if verification fails
     }
   };

@@ -1,9 +1,9 @@
-//apollo serve express
 const { ApolloServer } = require("apollo-server-express");
 const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
+const xss = require("xss-clean");
 
 //subscription
 const { WebSocketServer } = require("ws");
@@ -53,6 +53,7 @@ async function startApolloServer(typeDefs, resolvers) {
   // Add other Express middleware here, if needed
   app.use(express.json());
   app.use(cors());
+  app.use(xss());
 
   require("./src/routes/cart.routes.js")(express, app);
   require("./src/routes/order.routes.js")(express, app);

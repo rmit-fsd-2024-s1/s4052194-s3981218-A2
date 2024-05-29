@@ -1,14 +1,14 @@
 const db = require("../database");
 const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator');
 
 exports.signIn = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).send({
-      message: "Email and password cannot be empty!",
-    });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
+
+  const { email, password } = req.body;
 
   try {
     const user = await db.user.findOne({ where: { email } });
@@ -17,12 +17,6 @@ exports.signIn = async (req, res) => {
         message: "User not found.",
       });
     }
-
-    // if (user.blocked_status) {
-    //   return res.status(403).send({
-    //     message: "User is blocked. Please contact support.",
-    //   });
-    // }
 
     const passwordIsValid = bcrypt.compareSync(password, user.password_hash);
     if (!passwordIsValid) {
@@ -35,7 +29,7 @@ exports.signIn = async (req, res) => {
       user_id: user.user_id,
       username: user.username,
       email: user.email,
-      blocked_status:user.blocked_status
+      blocked_status: user.blocked_status
     });
   } catch (error) {
     res.status(500).send({
