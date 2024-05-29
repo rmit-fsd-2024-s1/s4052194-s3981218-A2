@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { getReviews, deleteReview } from '../data/repository';
 import '../style/Reviews.css';
+import Filter from 'bad-words';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
+  const filter = new Filter();
+
+  //add words
+  // filter.addWords('','');
+
+  //remove words
+  // filter.removeWords('');
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -32,6 +40,10 @@ const Reviews = () => {
     }
   };
 
+  const isInappropriate = (comment) => {
+    return filter.isProfane(comment);
+  };
+
   return (
     <div className="admin-container">
       <h2>Reviews Management</h2>
@@ -46,7 +58,7 @@ const Reviews = () => {
         </thead>
         <tbody>
           {reviews.map((review) => (
-            <tr key={review.review_id}>
+            <tr key={review.review_id} className={isInappropriate(review.comment) ? 'inappropriate' : ''}>
               <td>{review.user.username}</td>
               <td>{review.product.product_name}</td>
               <td>{review.comment}</td>
