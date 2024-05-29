@@ -3,10 +3,15 @@ import client from "../services/client";
 import gql from "graphql-tag";
 import { useState, useEffect } from "react";
 import { getAllReviews } from "../data/repository";
-
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, defaults } from "chart.js/auto";
+import { calculateTheMostReview } from "../data/calculation";
 const Dashboard = () => {
   const [showLatestReviews, setShowLatestReviews] = useState([]);
-  const [latest,setLatest] = useState([]);
+  const [latest, setLatest] = useState([]);
+  const [data, setBardata] = useState([]);
+  const [labels, setBarLabels] = useState([]);
+  const [sortReviews, setSortReviews] = useState([]);
   useEffect(() => {
     //initial stage so the admin can see the reviews after refreshing the page
     const fetchReviews = async () => {
@@ -14,8 +19,6 @@ const Dashboard = () => {
       setShowLatestReviews(getReviews);
     };
     fetchReviews();
-  }, []);
-  useEffect(() => {
     const subscription = client
       .subscribe({
         query: gql`
@@ -23,7 +26,10 @@ const Dashboard = () => {
             review_added {
               review_id
               comment
-              product_id
+              product {
+                product_id
+                product_name
+              }
               score
               user_id
             }
@@ -32,6 +38,7 @@ const Dashboard = () => {
       })
       .subscribe({
         next: (payload) => {
+          console.log("new payload", payload.data);
           const newReview = payload.data.review_added;
           setShowLatestReviews((prevReviews) => {
             const reviewExists = prevReviews.some(
@@ -44,11 +51,19 @@ const Dashboard = () => {
           });
         },
       });
+
+    return () => subscription.unsubscribe();
   }, []);
-   useEffect(() => {
+  useEffect(() => {
     const temp = showLatestReviews.slice(showLatestReviews.length - 3);
     setLatest(temp);
-   }, [showLatestReviews]);
+    let sorted = calculateTheMostReview(showLatestReviews);
+    setSortReviews(sorted);
+  }, [showLatestReviews]);
+  useEffect(() => {
+    setBarLabels(sortReviews.map((e) => e[0]));
+    setBardata(sortReviews.map((e) => e[1].avg));
+  }, [sortReviews]);
   return (
     <div className="d-flex">
       <div className="admin-container">
@@ -77,8 +92,27 @@ const Dashboard = () => {
             })}
           </tbody>
         </table>
-      </div>
-      <div className="">x</div>
+      </div>{" "}
+      <Bar
+        data={{
+          labels: labels.slice(0, 5),
+          datasets: [
+            {
+              label: "Rating",
+              data: data.slice(0, 5),
+              backgroundColor: ["rgba(43, 63, 229, 0.8)"],
+              borderRadius: 5,
+            },
+          ],
+        }}
+        options={{
+          plugins: {
+            title: {
+              text: "Revenue Source",
+            },
+          },
+        }}
+      />
     </div>
   );
 };
