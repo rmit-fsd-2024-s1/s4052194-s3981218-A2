@@ -4,6 +4,7 @@ import { CartProvider } from "../fragments/context/CartContext";
 import * as cartService from "../services/cartService";
 import { useNavigate } from "react-router-dom";
 import useCart from "../fragments/context/CartContext";
+//More details in the readme file
 // Mock the cartService module
 jest.mock("../services/cartService", () => ({
   addCart: jest.fn(),
@@ -29,11 +30,12 @@ describe("CartContext", () => {
   const wrapper = ({ children }) => (
     <CartProvider userId="1">{children}</CartProvider>
   );
-//test adding a product
+  //test adding a product
   test("Adding a product to the cart", async () => {
+    //product
     const product = { product_id: 1, product_name: "Apple", product_price: 10 };
     cartService.addCart.mockResolvedValue({});
-
+    //test the use reducer
     const { result } = renderHook(() => useCart(), { wrapper });
 
     await act(async () => {
@@ -43,12 +45,14 @@ describe("CartContext", () => {
     expect(cartService.addCart).toHaveBeenCalledWith(product);
     expect(result.current.state.products).toEqual([product]);
   });
-//test removing a product
+  //test removing a product
   test("Removing a product from the cart", async () => {
+    //product
     const product = { product_id: 1, product_name: "Apple", product_price: 10 };
     cartService.addCart.mockResolvedValue({});
     cartService.removeOne.mockResolvedValue({});
 
+    //test the use reducer
     const { result } = renderHook(() => useCart(), { wrapper });
 
     await act(async () => {
@@ -60,8 +64,9 @@ describe("CartContext", () => {
     });
     expect(result.current.state.products).toEqual([]);
   });
-//test adding a quantity
-  test("Adding quantity in the cart", async () => {
+  //test changing a quantity
+  test("Changing a quantity in the cart", async () => {
+    //product
     const product = {
       product_id: 1,
       product_name: "Apple",
@@ -71,6 +76,7 @@ describe("CartContext", () => {
     cartService.addCart.mockResolvedValue({});
     cartService.updateCart.mockResolvedValue({});
 
+    //test the use reducer
     const { result } = renderHook(() => useCart(), { wrapper });
 
     await act(async () => {
@@ -82,6 +88,7 @@ describe("CartContext", () => {
     });
     let final = product;
     final.quantity += 1;
+    //check if the product quantity's added by 1
     expect(result.current.state.products).toEqual([final]);
   });
 });
