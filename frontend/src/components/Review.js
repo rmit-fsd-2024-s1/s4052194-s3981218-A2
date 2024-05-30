@@ -153,7 +153,7 @@ const Review = ({ productId, block }) => {
       window.confirm("You sure you want to unfollow?") &&
         unfollowing(userId, reviewUserId);
     } else {
-      window.confirm("You sure you want to unfollow?") &&
+      window.confirm(`You sure you want to follow this user?`) &&
         following(userId, reviewUserId);
     }
   };
