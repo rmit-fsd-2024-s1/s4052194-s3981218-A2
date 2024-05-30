@@ -16,8 +16,8 @@ const Productpage = ({ username }) => {
   const { state, addToCart, userId } = useCart();
   useScrollToTop();
   const [isDisabled, setIsDisabled] = useState(false);
-  //    setIsDisabled(true);
   const [block, setIsBlock] = useState();
+  //disbaled the atc button if the product's already in the cart
   useEffect(() => {
     state.products.map((item) => {
       if (item.product_id === parseInt(urlId, 10)) {
@@ -25,7 +25,7 @@ const Productpage = ({ username }) => {
       }
     });
   }, [state]);
-  //get block
+  //get user and check if's being blocked or not
   useEffect(() => {
     const activeUser = JSON.parse(localStorage.getItem("activeUser"));
     if (activeUser) {
@@ -52,7 +52,7 @@ const Productpage = ({ username }) => {
     product_stock,
     product_price,
   } = product[0];
-//find special products
+  //find special products
   const getSpecialId = specialProducts.map((e) => e.product_id);
   const isSpecial = getSpecialId.includes(product_id);
   return (

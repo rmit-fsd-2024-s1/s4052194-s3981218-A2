@@ -9,9 +9,8 @@ import useProducts from "../fragments/context/ProductContext";
 const Product = (props) => {
   const { state, addToCart, userId } = useCart();
   const { specialProducts } = useProducts();
-  //disalbed the button
   const [isDisabled, setIsDisabled] = useState(false);
-  //    setIsDisabled(true);
+  //if find the item in the cart set the button to disable
   useEffect(() => {
     state.products.map((item) => {
       if (item.product_id === props.product_id) {
@@ -19,7 +18,7 @@ const Product = (props) => {
       }
     });
   }, [state]);
-
+  //if get all special products
   const getSpecialId = specialProducts.map((e) => e.product_id);
   const isSpecial = getSpecialId.includes(props.product_id);
   return (

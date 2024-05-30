@@ -1,3 +1,4 @@
+//manage all the review operations
 export const reviewReducer = (state, action) => {
     const { type, payload } = action;
     switch (type) {

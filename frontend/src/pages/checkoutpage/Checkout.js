@@ -12,6 +12,7 @@ import useCart from "../../fragments/context/CartContext";
 import useCreditCardValidation from "../../fragments/customHook/useCreditCardValidation";
 const Checkout = () => {
   const { userId } = useCart();
+  //handle validation
   const { inputClassName, input, handleChange, onSubmit } =
     useCreditCardValidation();
   return (

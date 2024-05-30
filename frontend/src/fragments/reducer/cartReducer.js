@@ -1,3 +1,4 @@
+//manage all the cart operations
 export const cartReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {

@@ -11,7 +11,7 @@ const ProductContext = createContext();
 export const ProductsProvider = ({children}) => {
   const [products, setProducts] = useState([]);
   const [specialProducts, setSpecialProducts] = useState([]);
-
+//load the products from the database
   const [loading,setLoading] = useState(true);
   useEffect(() => {
     const fetchInitData = async () => {

@@ -42,7 +42,7 @@ export async function addReview(review) {
   const data = await request(GRAPH_QL_URL, mutation, review);
   return data.createReview;
 }
-
+//delete a review
 export async function deleteReview(id) {
   const review = {
     review_id: id,
@@ -52,7 +52,7 @@ export async function deleteReview(id) {
   });
   return response.data;
 }
-
+//edit a review
 export async function editReview(id, comment) {
   const review = {
     review_id: id,

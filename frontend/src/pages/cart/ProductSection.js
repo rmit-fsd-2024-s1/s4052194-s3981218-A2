@@ -3,6 +3,7 @@ import NavItem from "../../fragments/navbar/NavItem";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../fragments/context/CartContext";
 const ProductSection = () => {
+  //show products
   const navigate = useNavigate();
   const { state, removeFromCart, updateQuantity } = useCart();
   const handleCheckout = () => {

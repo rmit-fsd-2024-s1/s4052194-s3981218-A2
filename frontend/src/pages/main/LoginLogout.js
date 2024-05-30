@@ -4,7 +4,7 @@ import { getUser, removeUser, getData } from "../../services/repository";
 
 const LoginLogout = () => {
   const [username, setUsername] = useState(getUser());
-  const [userId,setUserId] = useState(null);
+  const [userId, setUserId] = useState(null);
   const loginUser = (username) => {
     setUsername(username);
   };
@@ -32,7 +32,7 @@ const LoginLogout = () => {
     };
     getId();
   }, [username]);
-  return { username, loginUser, logout, userId};
+  return { username, loginUser, logout, userId };
 };
 
 export default LoginLogout;

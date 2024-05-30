@@ -1,4 +1,5 @@
 import React from "react";
+//star component
 const Star = ({ starId, rating, onMouseEnter, onMouseLeave, onClick }) => {
   let styleClass = "star-rating-blank";
   if (rating >= starId) {

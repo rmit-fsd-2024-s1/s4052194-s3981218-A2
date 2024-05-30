@@ -20,11 +20,17 @@ const Home = () => {
 
   return (
     <div>
-  
-         <div className="heading text-center mt-5 px-5">
-      <h2>We're passionate about offering you the finest selection of organic goods. </h2>
-      <p>Every product on our shelves is carefully curated to ensure that you're getting the best quality, flavor, and nutrition while supporting environmentally-friendly practices.</p>
-    </div>
+      <div className="heading text-center mt-5 px-5">
+        <h2>
+          We're passionate about offering you the finest selection of organic
+          goods.{" "}
+        </h2>
+        <p>
+          Every product on our shelves is carefully curated to ensure that
+          you're getting the best quality, flavor, and nutrition while
+          supporting environmentally-friendly practices.
+        </p>
+      </div>
       <CarouselSection />
       <Banner text="Special products" linkto="/special" />
       <SectionHeader
@@ -32,7 +38,7 @@ const Home = () => {
         link="/shop-online"
         subtitle="View all products"
       />
-      <ProductList list={showMostPopular}/>
+      <ProductList list={showMostPopular} />
     </div>
   );
 };

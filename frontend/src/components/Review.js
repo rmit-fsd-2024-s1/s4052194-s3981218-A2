@@ -142,12 +142,13 @@ const Review = ({ productId, block }) => {
       console.log(err);
     }
   };
+  //delete a review
   const onDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
       removeReview(id);
     }
   };
-
+//follow part
   const handleFollow = (action, reviewUserId) => {
     if (action === "unfollow") {
       window.confirm("You sure you want to unfollow?") &&
@@ -161,7 +162,7 @@ const Review = ({ productId, block }) => {
   if (loadingReview) {
     return <div>Loading...</div>;
   }
-
+//edit the review
   const handleEdit = (e) => {
     setEdit(e.target.value);
   };

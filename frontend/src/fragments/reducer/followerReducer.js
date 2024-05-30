@@ -1,3 +1,4 @@
+//manage all the follow operations
 export const followerReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
