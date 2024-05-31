@@ -106,9 +106,9 @@ const Review = ({ productId, block }) => {
   const apiSubmitReview = (status,review) => {
     try {
       if (status === 'review') {
-        createReview(review);
+        createReview(review);//review
       } else if (status === 'reply') {
-        createReply(review);
+        createReply(review);//reply
       }
       setComment("");
       setReplyText("");
