@@ -3,12 +3,18 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding:0;
+  box-sizing: border-box;
 }
 
 code {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.welcome {
+  margin-left:-240px;
+  margin-bottom:100px;
+}
 .nav-item a{
   
   color:rgb(0, 0, 0);
@@ -23,7 +29,28 @@ code {
   background-color:  rgb(0, 159, 127);
   
 }
+.navbar {
+  height: 100%;
+}
+.navbar-container {
+  width: 15%;
+}
 .admin {
   color:rgb(0, 159, 127);
   font-weight: 600;
+}
+.nav-item {
+  margin-bottom: 10px; 
+  margin-top:26px;
+}
+
+.nav-link {
+  padding: 10px 15px; 
+}
+.flex-grow-1 {
+  flex-grow: 1;
+
+}
+.navbar {
+  flex-direction: column !important;
 }

@@ -22,25 +22,29 @@ export default function App() {
   }, [message]);
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <MessageContext.Provider value={{ message, setMessage }}>
-        <Router>
-          <Navbar />
-          <main role="main">
-            <div className="container my-3">
-              <Routes>
-                <Route path="/" element={<Main />} />
-                <Route path="/user" element={<Users />} />
-                <Route path="/review" element={<Reviews />} />{" "}
-                {/* Add Reviews route */}
-                <Route path="/product" element={<Products />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-              </Routes>
+    <>
+      <div className="d-flex min-vh-100">
+        <MessageContext.Provider value={{ message, setMessage }}>
+          <Router>
+            <div className="navbar-container">
+              <Navbar />
             </div>
-          </main>
-          <Footer />
-        </Router>
-      </MessageContext.Provider>
-    </div>
+            <main role="main" className="flex-grow-1 d-flex align-items-center justify-content-center">
+              <div className="container my-3">
+                <Routes>
+                  <Route path="/" element={<Main />} />
+                  <Route path="/user" element={<Users />} />
+                  <Route path="/review" element={<Reviews />} />{" "}
+                  {/* Add Reviews route */}
+                  <Route path="/product" element={<Products />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                </Routes>
+              </div>
+            </main>
+          </Router>
+        </MessageContext.Provider>
+      </div>
+      <Footer />
+    </>
   );
 }
