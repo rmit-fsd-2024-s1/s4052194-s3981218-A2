@@ -7,7 +7,9 @@ import userService from "../../services/userService";
 import profile_image from "../../assets/profile_image.jpg";
 
 function MyProfile(props) {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook to programmatically navigate
+
+  // State to manage user data
   const [user, setUser] = useState({
     user_id: "",
     username: "",
@@ -15,12 +17,14 @@ function MyProfile(props) {
     password: "",
     date_joined: "",
   });
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [isUpdated, setIsUpdated] = useState(false);
 
+  const [newPassword, setNewPassword] = useState(""); // State for new password
+  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
+  const [error, setError] = useState(""); // State for errors
+  const [usernameError, setUsernameError] = useState(""); // State for username error
+  const [isUpdated, setIsUpdated] = useState(false); // State for update status
+
+  // Fetch user data on component mount
   useEffect(() => {
     const activeUser = JSON.parse(localStorage.getItem("activeUser"));
     if (activeUser) {
@@ -37,21 +41,25 @@ function MyProfile(props) {
     }
   }, [navigate]);
 
+  // Handle new password change
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
     setError("");
   };
 
+  // Handle confirm password change
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
     setError("");
   };
 
+  // Handle username change
   const handleUsernameChange = (e) => {
     setUser({ ...user, username: e.target.value });
     setUsernameError("");
   };
 
+  // Handle account deletion
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -79,6 +87,7 @@ function MyProfile(props) {
     });
   };
 
+  // Handle saving changes
   const handleSave = (e) => {
     e.preventDefault();
 
@@ -157,7 +166,7 @@ function MyProfile(props) {
                     className="form-control"
                     id="username"
                     value={user.username}
-                    onChange={handleUsernameChange}
+                    onChange={handleUsernameChange} // Handle username change
                   />
                   {usernameError && <p className="text-danger">{usernameError}</p>}
                 </div>
@@ -168,7 +177,7 @@ function MyProfile(props) {
                     className="form-control"
                     id="email"
                     value={user.email}
-                    disabled
+                    disabled // Email is read-only
                   />
                 </div>
                 <div className="form-group">
@@ -178,7 +187,7 @@ function MyProfile(props) {
                     className="form-control"
                     id="newPassword"
                     value={newPassword}
-                    onChange={handleNewPasswordChange}
+                    onChange={handleNewPasswordChange} // Handle new password change
                   />
                 </div>
                 <div className="form-group">
@@ -188,7 +197,7 @@ function MyProfile(props) {
                     className="form-control"
                     id="confirmPassword"
                     value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
+                    onChange={handleConfirmPasswordChange} // Handle confirm password change
                   />
                 </div>
                 {error && <p className="text-danger">{error}</p>}
