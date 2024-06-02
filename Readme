@@ -1,5 +1,70 @@
-1. Run the server
-2. Inside the backend/src/database/index.js, please uncomment the "seedData();". After the data is available in the database,
-please comment it back.
-3. You should see the normal products and special products.
-4. Please make sure that the app is not crashing during this process. If it's being crashed, try to restart the server again.
+Github: https://github.com/rmit-fsd-2024-s1/s4052194-s3981218-A2
+We were using NPM version - 10.5.0 to install the dependencies and run the app.
+
+How to run the app
+Go to the backend/database/index.js and uncommented seedData(); (line 93)
+Change the database credentials in config.js (same folder)
+Run the backend app -> Npm install -> Npm run
+Run the frontend app -> Npm install -> Npm run
+To run the unit test -> Npm test
+Run the admin-frontend app -> Npm install -> Npm run
+
+Business Logic
+You have to add a product to the cart in order to adjust the quantity.
+Order history is not stored in the database
+
+Unit tests - Cart
+We included 3 unit tests inside the frontend/src/unit tests folder called Cart.test.js
+3 Unit tests are : Mocking the add to the cart, removing from the cart and changing the product quantity services and checking the states update
+The success criteria: 
+Add to cart successfully. 
+Remove from cart successfully.
+Change the quantity in the cart page successfully.
+Unit tests - reviews
+The test mocks the reviewService module, including functions such as addReview and getAllReviews, ensuring that the actual API calls are not made during testing. The useNavigate hook from React Router is also mocked to handle navigation without affecting the test environment.
+Before each test, all mock functions are cleared to ensure a clean test state. The test uses a wrapper component that provides the necessary context (CartProvider) for the useReview hook to function correctly.
+The test verifies that the addReview function from reviewService was called with the correct arguments. It also checks that the state of reviews within the hook contains the newly added review, ensuring that the review addition logic works as expected.
+ZERO without the supporting explanation of the unit tests.
+
+—-----
+HD: Admin- review [2 marks]
+
+To detect and handle inappropriate reviews, we have integrated 'bad-words' library.
+Reference: https://www.npmjs.com/package/bad-words
+It comes with pre-defined words, which can be accessed through this link https://github.com/web-mech/badwords/blob/master/lib/lang.json
+In addition, we can add or remove words depending on the business logic.
+
+Review is considered to be inappropriate if it contains:
+-   Hate speech
+-   Explicit content or references
+-   Unprofessional language use
+-   Personal attack
+-   Reviews not relevant to the product
+-   Self promotion
+-   Reviews that reveals privacy information
+-   Promoting illegal activities
+
+Following are few scenarios that we can point out:
+-   One of the scenarios is where a user may use unprofessional language to describe a situation which may be caused by misunderstanding or a fault from either users side or from the business side. Ex: 'This product is shit'
+-  Taking personal considerations and using the review section as an advantage to show hate speech is one of the other scenario where we need to address the reviews.For example: Personal attack --> 'Seller is a scammer'
+-   Revealing private information such as card numbers, other users' privacy information needs to be detected and deleted as it causes breach in the privacy terms and conditions. For example: ‘This is my address No 45, Court Street, Melbourne.
+
+
+
+GraphQL subscription
+
+There are 2 graphs in the dashboard page.
+The bar graph represents the highest average rating products. The admin can use this chart to see the top most products with the highest reviews
+It will show only the top 10 products. 
+If there is less than 10 products that have a review, it will show only the products that have reviews
+Formular = Product A has 5 reviews with all 5 = avg is 5.
+Formular = Product B has 2 reviews with 1 and 5 = avg is 2.5
+The pie chart represents the Distribution of Number of Reviews by Product. The admin can use this graph to see which products are popular aka have the most number of reviews
+It will count the reviews by products.
+A product must have at least one review in order to be shown in the chart
+Formular = Product A has 10 reviews -> Show 10 counts
+
+Reference lists (aside from the inline comment)
+- Products image: https://gemini.google.com/
+- GraphQL, Database, Services are adapt from COSC2758/2938 Full Stack Development
+
