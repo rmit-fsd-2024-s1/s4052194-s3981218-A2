@@ -12,6 +12,10 @@ Run the admin-frontend app -> Npm install -> Npm run
 Business Logic
 You have to add a product to the cart in order to adjust the quantity.
 Order history is not stored in the database
+Check out credentials:
+//ref https://javascript.plainenglish.io/how-to-build-a-credit-card-user-interface-with-validation-in-javascript-4f190b6208ad
+- Example valid credit card number: 4263982640269299
+
 
 Unit tests - Cart
 We included 3 unit tests inside the frontend/src/unit tests folder called Cart.test.js
