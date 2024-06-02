@@ -4,10 +4,12 @@ We were using NPM version - 10.5.0 to install the dependencies and run the app.
 How to run the app
 Go to the backend/database/index.js and uncommented seedData(); (line 93)
 Change the database credentials in config.js (same folder)
-Run the backend app -> Npm install -> Npm run
-Run the frontend app -> Npm install -> Npm run
-To run the unit test -> Npm test
-Run the admin-frontend app -> Npm install -> Npm run
+1.Run the backend app -> Npm install -> Npm run
+2.**IMPORTANT** please comment out the seedData(); (line 93) before starting the frontend server.
+3.Please make sure you don't have "Key = activeUser" available in the localStorage and have value before running the frontend server. 
+4.Run the frontend app -> Npm install or Npm install --legacy-peer-deps(if you see an error), 
+5.Run the admin-frontend app -> Npm install -> Npm run
+6.To run the unit test -> Npm test
 
 Business Logic
 You have to add a product to the cart in order to adjust the quantity.
